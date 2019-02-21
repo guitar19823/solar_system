@@ -1116,6 +1116,9 @@ window.onload = () => {
         })
     }
     
+    setTitle('Объекты солнечной системы');
+    getPlanets();
+    
     call(planets, 'objects', 'Объекты солнечной системы', getPlanets);
     call(flight, 'flight', 'Полет по солнечной системе', getFlight);
     call(sounds, 'sounds', 'Выбор фоновой музыки', getSounds);
@@ -1212,7 +1215,7 @@ window.onload = () => {
     }
     
     /**
-    * getPlanets
+    * getHome
     */
     function getHome() {
 		color('home', navColor);
@@ -1980,6 +1983,8 @@ window.onload = () => {
             objectsNames[i].addEventListener('click', function () {lookAtPlanet(i)})
         }
     }
+    
+    doNotFlyLookAtSelectedPlanet();
 	
     (function () {
         let arr = [
