@@ -16,7 +16,7 @@
     "url": "https://github.com/guitar19823/solar_system/issues"
   },
   "engines": {
-    "node": "v8.11.4",
+    "node": "8.11.4",
     "npm": "5.6.0"
   },
   "homepage": "https://github.com/guitar19823/solar_system#readme",
