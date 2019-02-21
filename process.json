@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "koa-chat",
+      "name": "solar_system",
       "script": "index.js",
       "exec_mode": "cluster",
       "instances": 4
