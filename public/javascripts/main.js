@@ -997,17 +997,18 @@ window.onload = () => {
         <nav class="nav">
             <p>Меню</p>
             <ul>
-                <li class="page" id="planets">объекты</li>
-                <li class="page" id="flight">полет</li>
-                <li class="page" id="sounds">музыка</li>
-                <li class="page" id="chat">чат</li>
-                <li class="page" id="contacts">контакты</li>
+                <li class="menu_btns" id="planets">объекты</li>
+                <li class="menu_btns" id="flight">полет</li>
+                <li class="menu_btns" id="sounds">музыка</li>
+                <li class="menu_btns" id="chat">чат</li>
+                <li class="menu_btns" id="contacts">контакты</li>
             </ul>
         </nav>
         <main id="main"></main>
         <div id="audio">
             <audio src="/sounds/space${parseInt(Math.random() * 27 + 1)}.mp3" controls id="track">Your browser does not support the audio element.</audio>
         </div>
+        <audio id="system_sounds">Your browser does not support the audio element.</audio>
         <footer class="footer">
             <p>&copy; Copyright ${year}.</p>
         </footer>
@@ -1016,6 +1017,7 @@ window.onload = () => {
     /**
     * showHideMain
     */
+    /*
     timeout = setTimeout(function () {
         container.classList.add('opacity');
         mobileDevice() || (document.body.style.cursor = 'none');
@@ -1038,8 +1040,10 @@ window.onload = () => {
             });
         });
     } ());
+    */
     
     let track = document.getElementById('track'),
+        system_sounds = document.getElementById('system_sounds'),
         title = document.getElementById('title'),
         audio = document.getElementById('audio'),
         blackPanel = document.createElement('div'),
@@ -1049,7 +1053,7 @@ window.onload = () => {
         sounds = document.getElementById('sounds'),
         flight = document.getElementById('flight'),
         planets = document.getElementById('planets'),
-        page = document.getElementsByClassName('page'),
+        menuBtns = document.getElementsByClassName('menu_btns'),
         button_menu = document.getElementsByClassName('button_menu')[0],
         nav = document.getElementsByClassName('nav')[0],
         textColor = [],
@@ -1076,14 +1080,24 @@ window.onload = () => {
         nav.classList.contains('to_top') ? closeNav() : openNav();
     });
     
-    for (let i = 0, l = page.length; i < l; i++) {
-        page[i].addEventListener('click', closeNav);
+    for (let i = 0, l = menuBtns.length; i < l; i++) {
+        menuBtns[i].addEventListener('click', function () {
+            system_sounds.src = `/sounds/2.mp3`;
+            system_sounds.play();
+        
+            closeNav();
+        });
+        menuBtns[i].addEventListener('mouseover', function () {
+            system_sounds.play();
+        });
+        
     }
     
     /**
     * openNav
     */
     function openNav() {
+        system_sounds.src = `/sounds/1.mp3`;
         nav.classList.add('to_top'),
         button_menu.classList.add('rotate_button'),
         button_menu.children[0].classList.add('turn_right'),
@@ -1100,7 +1114,7 @@ window.onload = () => {
         button_menu.children[0].classList.remove('turn_right'),
         button_menu.children[1].classList.remove('turn_left'),
         setTimeout(function () {
-         blackPanel.remove();
+            blackPanel.remove();
         }, 500)
     }
     
@@ -1246,10 +1260,12 @@ window.onload = () => {
         
         for (let i = 0, l = planetList.length; i < l; i++ ) {
             textColor.push(planetList[i]);
+            
             planetList[i].addEventListener('click', function () {
                 color(this, textColor);
                 deleteChilds(description);
-                if (description.lastChild == null) {
+                
+                if (description.lastChild === null) {
                     ajax({
                         method: 'POST',
                         url: 'get_descriptions',
@@ -1399,14 +1415,30 @@ window.onload = () => {
     function getContacts() {
 		color(contacts, navColor);
         
-		main.innerHTML = `<div id="resume"></div>`;
+		main.innerHTML = `
+            <div id="feedback">
+                <form>
+                    <p id="form_title">Обратная связь</p>
+                    <input type="text" placeholder="Ваше имя *" id="user_name">
+                    <input type="text" placeholder="Логин telegramm *" id="user_telegramm">
+                    <textarea id="user_text"></textarea>
+                    <label><input type="checkbox" id="not_bot"> я не робот</label>
+                    <p id="task">1 + 1</p>
+                    <label><input type="text" id="user_answer"> введите ответ</label>
+                    <input type="submit" value="отправить" id="form_submit">
+                </form>
+            </div>
+        `;
         
         audio.style.display = 'none';
+        
+        /*
 		let contactDetails = document.createElement('p'),
-            resume = document.getElementById('resume');
+            feedback = document.getElementById('feedback');
         
 		contactDetails.setAttribute('id', 'contactDetails');
-		resume.appendChild(contactDetails);
+		feedback.appendChild(contactDetails);
+        
         ajax({
             method: 'POST',
             url: 'get_contacts',
@@ -1414,12 +1446,8 @@ window.onload = () => {
             json: {"contacts": true},
             elementId: 'contactDetails' 
         });
+        */
 	}
-    
-    track.addEventListener('ended', function () {
-        track.src = `/sounds/space${parseInt(Math.random() * 27 + 1)}.mp3`;
-        this.play();
-    });
     
     /*-----------------  NAVIGATION PANEL -----------------*/
     
