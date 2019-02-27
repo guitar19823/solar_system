@@ -1417,22 +1417,12 @@ window.onload = () => {
         
 		main.innerHTML = `
             <div id="feedback">
-                <form>
-                    <p id="form_title">Обратная связь</p>
-                    <input type="text" placeholder="Ваше имя *" id="user_name">
-                    <input type="text" placeholder="Логин telegramm *" id="user_telegramm">
-                    <textarea id="user_text"></textarea>
-                    <label><input type="checkbox" id="not_bot"> я не робот</label>
-                    <p id="task">1 + 1</p>
-                    <label><input type="text" id="user_answer"> введите ответ</label>
-                    <input type="submit" value="отправить" id="form_submit">
-                </form>
+                <p id="contactDetalis"></p>
             </div>
         `;
         
         audio.style.display = 'none';
         
-        /*
 		let contactDetails = document.createElement('p'),
             feedback = document.getElementById('feedback');
         
@@ -1446,7 +1436,6 @@ window.onload = () => {
             json: {"contacts": true},
             elementId: 'contactDetails' 
         });
-        */
 	}
     
     /*-----------------  NAVIGATION PANEL -----------------*/
