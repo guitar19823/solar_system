@@ -13,8 +13,7 @@ window.onload = () => {
     
     let container = document.getElementsByClassName('container')[0],
         year = new Date().getFullYear(),
-        timeout,
-        timeToHide = 10000;
+        timeout;
     
     year = year === 2018 ? year : '2018 - ' + year;
     
@@ -46,6 +45,7 @@ window.onload = () => {
                 <li class="menu_btns" id="sounds">музыка</li>
                 <li class="menu_btns" id="chat">чат</li>
                 <li class="menu_btns" id="contacts">контакты</li>
+                <!-- <li class="menu_btns" id="settings">настройки</li> -->
             </ul>
         </nav>
         <main id="main"></main>
@@ -66,6 +66,7 @@ window.onload = () => {
         main = document.getElementById('main'),
         chat = document.getElementById('chat'),
         contacts = document.getElementById('contacts'),
+        settings = document.getElementById('settings'),
         sounds = document.getElementById('sounds'),
         flight = document.getElementById('flight'),
         planets = document.getElementById('planets'),
@@ -97,13 +98,13 @@ window.onload = () => {
     });
     
     for (let i = 0, l = menuBtns.length; i < l; i++) {
-        menuBtns[i].addEventListener('click', function () {
+        menuBtns[i].addEventListener('click', () => {
             system_sounds.src = `/sounds/2.mp3`;
             system_sounds.play();
         
             closeNav();
         });
-        menuBtns[i].addEventListener('mouseover', function () {
+        menuBtns[i].addEventListener('mouseover', () => {
             system_sounds.play();
         });
         
@@ -139,7 +140,7 @@ window.onload = () => {
     */
     function call(item, uri, title, foo) {
         navColor.push(item);
-        item.addEventListener('click', function () {
+        item.addEventListener('click', () => {
             setTitle(title);
             foo();
         })
@@ -153,6 +154,7 @@ window.onload = () => {
     call(sounds, 'sounds', 'Выбор фоновой музыки', getSounds);
     call(chat, 'chat', 'Общение по чату', getChat);
     call(contacts, 'contacts', 'Контактные данные', getContacts);
+    //call(settings, 'settings', 'Настройки', getSettings);
     
     /**
     * xhr
@@ -184,7 +186,7 @@ window.onload = () => {
     */
     function ajax(data) {
         let request = xhr();
-        request.addEventListener('readystatechange', function() {
+        request.addEventListener('readystatechange', () => {
             4 == request.readyState
             && 200 == request.status
             && (document.getElementById(data.elementId).innerHTML = request.responseText);
@@ -388,7 +390,7 @@ window.onload = () => {
         });
         
         socket.removeEventListener('message');
-        socket.addEventListener('message', msg => {
+        socket.addEventListener('message', (msg) => {
             if (messages) {
                 msgs.push(`<span>${msg.msg}</span>`);
                 
@@ -424,6 +426,31 @@ window.onload = () => {
             json: {"contacts": true},
             elementId: 'contactDetails' 
         });
+	}
+    
+    /**
+    * getSettings
+    */
+    function getSettings() {
+		color(settings, navColor);
+        
+		main.innerHTML = `
+            <div id="settings_panel">
+				<label>
+					<input type="checkbox" class="antialias">
+					Антиалиас
+				</label>
+            </div>
+        `;
+        
+        audio.style.display = 'none';
+
+	    let antialias = document.getElementsByClassName('antialias')[0],
+	    	canvas = document.getElementsByTagName('canvas')[0];
+
+	    antialias.addEventListener('click', function () {
+	    	//
+	    });
 	}
 
 	solarSystem();

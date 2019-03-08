@@ -2,7 +2,7 @@
 /* ****************** SOLAR SYSTEM **************** */
 /* ************************************************ */
 
-const solarSystem = () => {
+const solarSystem = (antialias = false) => {
     let width = window.innerWidth,
         height = window.innerHeight,
 		scene, camera, controls, renderer, texture,
@@ -76,7 +76,7 @@ const solarSystem = () => {
     */
     function initScene() {
         // Renderer
-		renderer = new THREE.WebGLRenderer({ antialias: true });
+		renderer = new THREE.WebGLRenderer({ antialias: antialias });
         renderer.setSize(width, height);
 		renderer.setPixelRatio(window.devicePixelRatio);
 		document.body.appendChild(renderer.domElement);
