@@ -136,7 +136,7 @@ const solarSystem = () => {
         spaceTexture = textureLoader.load(spaceTexture);
         textureLoader.manager.onLoad = function () {
             setTimeout(function () {
-                document.getElementById('preloader').remove();
+                document.getElementsByClassName('preloader')[0].remove();
             }, 2000);
         }
 		spaceTexture.anisotropy = 10;
