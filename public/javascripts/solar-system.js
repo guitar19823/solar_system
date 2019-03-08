@@ -136,9 +136,7 @@ const solarSystem = () => {
         spaceTexture = textureLoader.load(spaceTexture);
         textureLoader.manager.onLoad = function () {
             setTimeout(function () {
-                //track && track.play();
-                let preloader = document.getElementById('preloader');
-                preloader.classList.contains('done') || (preloader.classList.add('done'), preloader.innerHTML = '');
+                document.getElementById('preloader').remove();
             }, 2000);
         }
 		spaceTexture.anisotropy = 10;
@@ -300,8 +298,6 @@ const solarSystem = () => {
 			this.planet.position.z = Math.cos((this.t * this.s * 365.25 / this.yied) + this.start) * this.dts;
             
             this.planet.rotation.y = ((new Date().getTime() / 86400000) % 24) * Math.PI * this.yied / 365.25;
-			//if (this.rp) this.planet.rotation.y += (this.s * 365.25 / this.yied) * (Math.PI * this.pdiy) / 360;
-			//else this.planet.rotation.y -= (this.s * 365.25 / this.yied) * (Math.PI * this.pdiy) / 360;
             this.rp ? (
                 this.planet.rotation.y += 365.25 * this.s / this.yied * (Math.PI * this.pdiy) / 360
             ) : (
