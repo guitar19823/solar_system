@@ -2,7 +2,7 @@
 /* ****************** SOLAR SYSTEM **************** */
 /* ************************************************ */
 
-const solarSystem = (antialias = false) => {
+const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
     let width = window.innerWidth,
         height = window.innerHeight,
 		scene, camera, controls, renderer, texture,
@@ -14,7 +14,7 @@ const solarSystem = (antialias = false) => {
 
     const rotationalSpeed = 0.02;
 	const speedPlanets = 1 / 10000000;
-	const k = mobileDevice() ? 2 : 1;
+	const k = mobileDevice() ? 2 * graphics : 1 * graphics;
    	const fragShader = `
         void main() {
            gl_FragColor = vec4(255.0, 249.0, 23.0, 1.0);
@@ -39,6 +39,18 @@ const solarSystem = (antialias = false) => {
     `;
 
     /**
+    * getCookie
+    * @name
+    */
+    function getCookie(name) {
+        const matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    /**
     * mobileDevice
     */
     function mobileDevice() {
@@ -61,7 +73,7 @@ const solarSystem = (antialias = false) => {
             let dir = this.direction + Math.PI,
                 zA = Math.cos(this.angle),
                 vx = -zA * Math.sin(dir),
-                vy = Math.sin(this.angle),
+                vy = !!(+getCookie('invert_y')) ? Math.sin(this.angle) : -Math.sin(this.angle),
                 vz = zA * Math.cos(dir);
             
             this.camera.position.set(vx * this.distance + this.x, vy * this.distance + this.y, vz * this.distance + this.z);
@@ -130,14 +142,14 @@ const solarSystem = (antialias = false) => {
 		
 		// Space
 		let spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k),
-            spaceTexture = mobileDevice() ? '/textures/spacetexturemobile.jpg' : '/textures/spacetexturedesctop.jpg';
+            spaceTexture = `/textures/spacetexture${textures}.jpg`;
 		
 		let textureLoader = new THREE.TextureLoader();
         spaceTexture = textureLoader.load(spaceTexture);
         textureLoader.manager.onLoad = function () {
             setTimeout(function () {
                 document.getElementsByClassName('preloader')[0].remove();
-            }, 2000);
+            }, 5000);
         }
 		spaceTexture.anisotropy = 10;
 		let spaceMaterial = new THREE.MeshBasicMaterial({map: spaceTexture, side: THREE.BackSide});
@@ -224,17 +236,17 @@ const solarSystem = (antialias = false) => {
 			}
 		}
 		
-		mercury = new Planet(0.0163, 44 / k, '/textures/mercurytexture.jpg');
-		venus = new Planet(0.0403, 60 / k, '/textures/venustexture.jpg');
-		earth = new Planet(0.0425, 60 / k, '/textures/earthtexture.jpg', true, 1.01 );//0.00425
-		moon = new Planet(0.0116, 44 / k, '/textures/moontexture.jpg');
-		mars = new Planet(0.0226, 60 / k, '/textures/marstexture.jpg');
-		jupiter = new Planet(0.4611, 180 / k, '/textures/jupitertexture.jpg');
-		saturn = new Planet(0.3821, 180 / k, '/textures/saturntexture.jpg');
-		uranus = new Planet(0.1684, 180 / k, '/textures/uranustexture.jpg');
-		neptune = new Planet(0.167, 180 / k, '/textures/neptunetexture.jpg');
-		pluto = new Planet(0.0079, 30 / k, '/textures/plutotexture.jpg');
-		charon = new Planet(0.004, 30 / k, '/textures/charontexture.jpg');
+		mercury = new Planet(0.0163, 44 / k, `/textures/mercurytexture${textures}.jpg`);
+		venus = new Planet(0.0403, 60 / k, `/textures/venustexture${textures}.jpg`);
+		earth = new Planet(0.0425, 60 / k, `/textures/earthtexture${textures}.jpg`, true, 1.01 );//0.00425
+		moon = new Planet(0.0116, 44 / k, `/textures/moontexture${textures}.jpg`);
+		mars = new Planet(0.0226, 60 / k, `/textures/marstexture${textures}.jpg`);
+		jupiter = new Planet(0.4611, 180 / k, `/textures/jupitertexture${textures}.jpg`);
+		saturn = new Planet(0.3821, 180 / k, `/textures/saturntexture${textures}.jpg`);
+		uranus = new Planet(0.1684, 180 / k, `/textures/uranustexture${textures}.jpg`);
+		neptune = new Planet(0.167, 180 / k, `/textures/neptunetexture${textures}.jpg`);
+		pluto = new Planet(0.0079, 30 / k, `/textures/plutotexture${textures}.jpg`);
+		charon = new Planet(0.004, 30 / k, `/textures/charontexture${textures}.jpg`);
         // Planets
 		
         // Rings
@@ -326,7 +338,7 @@ const solarSystem = (antialias = false) => {
 			pz = this.planet.position.z;
 		}
 	}
-                                                          
+    
     // Flight controls
     function flightControl() {
         lookAtPlanet(null);
@@ -518,7 +530,8 @@ const solarSystem = (antialias = false) => {
             ['flight', flightControl],
             ['sounds', doNotFlyLookAtRandomPlanet],
             ['chat', doNotFlyLookAtRandomPlanet],
-            ['contacts', doNotFlyLookAtEarth]
+            ['contacts', doNotFlyLookAtEarth],
+            ['settings', doNotFlyLookAtRandomPlanet]
         ];
         
         arr.map(function (element) {
@@ -624,7 +637,7 @@ const solarSystem = (antialias = false) => {
 		}
         
         time = new Date().getTime() / 1000;
-		
+
         requestAnimationFrame(renderScene);
         renderer.render(scene, camera);
     }

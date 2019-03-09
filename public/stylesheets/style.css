@@ -39,7 +39,7 @@ width: 0.7vw;
 }
 
 body {
-	background-color: #ccc;
+	background-color: #1a1a1a;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -49,7 +49,7 @@ body {
 	font: 100%/1.5em sans-serif;
 	font-size: .9em;
 	color: #aaa;
-	overflow: hidden
+    overflow: hidden;
 }
 
 #black_panel {
@@ -350,7 +350,8 @@ canvas {
 .header {
 	position: inherit;
 	width: 100vw;
-	height: 7vh;
+	height: 60px;
+    padding: 0 30px;
 	z-index: 200;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -358,6 +359,58 @@ canvas {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    justify-content: flex-end;
+}
+
+.button_menu {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+.button_menu > div {
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 3px;
+    border-radius: 1.5px;
+    background: #aaa;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+.button_menu > div:nth-child(1) {
+    top: 5px;
+}
+
+.button_menu > div:nth-child(2) {
+    bottom: 5px;
+}
+
+.rotate_button {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+
+.turn_right {
+    top: 1.5px!important;
+    left: 3px!important;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transform-origin: 0%;
+    transform-origin: 0%;
+}
+
+.turn_left {
+    bottom: 1.5px!important;
+    left: 3px!important;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transform-origin: 0%;
+    transform-origin: 0%;
 }
 
 .nav {
@@ -368,7 +421,6 @@ canvas {
     width: 30vw;
     top: 20vh;
     left: 50%;
-    padding: 20px;
     -webkit-transform: translate(-50%, 100vh) scale(0);
     transform: translate(-50%, 100vh) scale(0);
     -webkit-transition: -webkit-transform .5s cubic-bezier(.64,.05,.5,1.17);
@@ -384,10 +436,13 @@ canvas {
 
 .nav > p {
     font-size: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    padding: 15px;
     border-bottom: 1px solid #eee;
     text-transform: uppercase;
+}
+
+.nav > ul {
+    padding: 15px;
 }
 
 .nav > ul > li {
@@ -456,6 +511,16 @@ canvas {
     background-size: 100%;
 }
 
+#settings::before {
+    display: inline-block;
+    content: "";
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    background: url(../images/settings.png) center no-repeat;
+    background-size: 100%;
+}
+
 /*
 .header {
 	position: inherit;
@@ -500,66 +565,14 @@ canvas {
 }
 */
 
-.button_menu {
-    position: inherit;
-    right: 2vw;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    -webkit-transition: 1s;
-    transition: 1s;
-}
-
-.button_menu > div {
-    position: absolute;
-    left: 0;
-    width: 20px;
-    height: 3px;
-    border-radius: 1.5px;
-    background: #aaa;
-    -webkit-transition: 1s;
-    transition: 1s;
-}
-
-.button_menu > div:nth-child(1) {
-    top: 5px;
-}
-
-.button_menu > div:nth-child(2) {
-    bottom: 5px;
-}
-
-.rotate_button {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-}
-
-.turn_right {
-    top: 1.5px!important;
-    left: 3px!important;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    -webkit-transform-origin: 0%;
-    transform-origin: 0%;
-}
-
-.turn_left {
-    bottom: 1.5px!important;
-    left: 3px!important;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-    -webkit-transform-origin: 0%;
-    transform-origin: 0%;
-}
-
 
 
 #main {
 	position: inherit;
     overflow: hidden;
-	top: 7vh;
+	top: 60px;
 	width: 100vw;
-	height: 86vh;
+	height: calc(100vh - 120px);
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex
@@ -671,7 +684,7 @@ select {
     animation: to-left 1s .5s both;
 }
 
-input[type=range] {
+#gamePad input[type=range] {
 	position: inherit;
 	right: 2vw;
     top: 5vh;
@@ -726,8 +739,8 @@ input[type=range] {
 	border: 1px solid #ccc;
 	top: 1vh;
     left: 50%;
-    -webkit-animation: element-scale 1s .5s both;
-    animation: element-scale 1s .5s both;
+    -webkit-animation: element-scale .5s .5s both;
+    animation: element-scale .5s .5s both;
 }
 
 #messages {
@@ -791,8 +804,8 @@ input[type=range] {
 	left: 2vw;
 	height: 100%;
 	width: 96vw;
-    -webkit-animation: contacts-scale 1s .5s both;
-    animation: contacts-scale 1s .5s both;
+    -webkit-animation: contacts-scale .5s .5s both;
+    animation: contacts-scale .5s .5s both;
 }
 
 #feedback img {
@@ -808,11 +821,110 @@ input[type=range] {
 	line-height: 1.5em;
 }
 
+#settings_panel {
+    width: 50vw;
+    height: 50vh;
+    position: inherit;
+    background: rgba(16, 34, 39, 0.9);
+    border: 1px solid #ccc;
+    top: 1vh;
+    left: 50%;
+    -webkit-animation: element-scale .5s .5s both;
+    animation: element-scale .5s .5s both;
+}
+
+#settings_panel-header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 46px;
+    font-size: 18px;
+    padding: 0 20px;
+    border-bottom: 1px solid #eee;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+#settings_panel-body {
+    position: absolute;
+    top: 47px;
+    width: 100%;
+    height: calc(100% - 78px);
+    padding: 20px;
+    overflow: auto;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.bl {
+    flex: 1 1 100px;
+}
+
+#settings_panel-body > ul {
+    list-style: none;
+    flex-basis: 100px;
+    margin-bottom: 30px;
+}
+
+#settings_panel-body > ul > p {
+    margin-bottom: 7px;
+    font-size: 16px;
+}
+
+#settings_panel-body > ul > li {
+    margin-bottom: 7px;
+}
+
+#settings_panel-body > ul > li > input {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+#settings_panel-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 32px;
+    padding: 0 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#settings_panel-footer > input {
+    color: #ccc;
+    font-size: 12px;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#reload_msg {
+    width: 310px;
+    height: 150px;
+    position: inherit;
+    padding: 15px;
+    background: rgba(11, 18, 20, 0.95);
+    border: 1px solid #ccc;
+    top: 20%;
+    left: 50%;
+    -webkit-animation: element-scale .2s both;
+    animation: element-scale .2s both;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .footer {
 	position: inherit;
 	bottom: 0;
 	width: 100vw;
-	height: 7vh;
+	height: 60px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -844,22 +956,37 @@ input[type=range] {
         left: 4vw;
     }
     
-    #range, #speedControl, #description, .button_menu {
+    #range, #speedControl, #description {
         right: 4vw;
     }
     
     .header {
-        height: 10vh;
+        height: 40px;
+        padding: 0 15px;
     }
     
     .nav {
         top: 14vh;
         width: 80vw;
     }
+
+    .nav > p {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .nav > ul {
+        padding: 10px;
+    }
+
+    .nav > ul > li {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
     
     #main {
-        top: 10vh;
-        height: 81.2vh;
+        top: 40px;
+        height: calc(100vh - 80px);
     }
     
     #description {
@@ -893,6 +1020,24 @@ input[type=range] {
     #feedback {
         left: 4vw;
         width: 92vw;
+    }
+
+    #settings_panel {
+        width: 80vw;
+        height: calc(100vh - 100px);
+    }
+
+    #settings_panel-body > ul {
+        width: 100%;
+    }
+
+    #reload_msg {
+        width: 280px;
+        height: 120px;
+    }
+
+    .footer {
+        height: 40px;
     }
 }
     

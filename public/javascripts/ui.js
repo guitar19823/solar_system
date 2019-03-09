@@ -45,7 +45,7 @@ window.onload = () => {
                 <li class="menu_btns" id="sounds">музыка</li>
                 <li class="menu_btns" id="chat">чат</li>
                 <li class="menu_btns" id="contacts">контакты</li>
-                <!-- <li class="menu_btns" id="settings">настройки</li> -->
+                <li class="menu_btns" id="settings">настройки</li>
             </ul>
         </nav>
         <main id="main"></main>
@@ -73,6 +73,10 @@ window.onload = () => {
         menuBtns = document.getElementsByClassName('menu_btns'),
         button_menu = document.getElementsByClassName('button_menu')[0],
         nav = document.getElementsByClassName('nav')[0],
+	    antialias = getCookie('antialias'),
+		invert_y = getCookie('invert_y'),
+		textures = getCookie('textures'),
+		graphics = getCookie('graphics'),
         textColor = [],
         navColor = [],
         arrObj = [
@@ -92,6 +96,31 @@ window.onload = () => {
         ];
     
     blackPanel.id = 'black_panel';
+
+    if (antialias === undefined) {
+    	antialias = '0';
+    	setCookie('antialias', '0');
+    }
+
+    if (invert_y === undefined) {
+    	invert_y = '1';
+    	setCookie('invert_y', '1');
+    }
+
+    if (textures === undefined) {
+    	if (mobileDevice()) {
+    		textures = '1';
+    		setCookie('textures', '1');
+		} else {
+    		textures = '2';
+    		setCookie('textures', '2');
+		}
+    }
+
+    if (graphics === undefined) {
+    	graphics = '1';
+    	setCookie('graphics', '1');
+    }
     
     button_menu.addEventListener('click', function () {
         nav.classList.contains('to_top') ? closeNav() : openNav();
@@ -147,14 +176,62 @@ window.onload = () => {
     }
     
     setTitle('Объекты солнечной системы');
-    getPlanets();
+    renderPlanets();
     
-    call(planets, 'objects', 'Объекты солнечной системы', getPlanets);
-    call(flight, 'flight', 'Полет по солнечной системе', getFlight);
-    call(sounds, 'sounds', 'Выбор фоновой музыки', getSounds);
-    call(chat, 'chat', 'Общение по чату', getChat);
-    call(contacts, 'contacts', 'Контактные данные', getContacts);
-    //call(settings, 'settings', 'Настройки', getSettings);
+    call(planets, 'objects', 'Объекты солнечной системы', renderPlanets);
+    call(flight, 'flight', 'Полет по солнечной системе', renderFlight);
+    call(sounds, 'sounds', 'Выбор фоновой музыки', renderSounds);
+    call(chat, 'chat', 'Общение по чату', renderChat);
+    call(contacts, 'contacts', 'Контактные данные', renderContacts);
+    call(settings, 'settings', 'Настройки', renderSettings);
+
+	/**
+	* setCookie
+	* @name
+	* @value
+	* @options
+	*/
+	function setCookie(name, value, options = { expires: 604800, path: '/' }) {
+		let expires = options.expires;
+
+		if (typeof expires == "number" && expires) {
+			const date = new Date();
+
+			date.setTime(date.getTime() + expires * 1000);
+			expires = options.expires = date;
+		}
+
+		if (expires && expires.toUTCString) {
+			options.expires = expires.toUTCString();
+		}
+
+		value = encodeURIComponent(value);
+
+		let updatedCookie = name + "=" + value;
+
+		for (let propName in options) {
+			updatedCookie += "; " + propName;
+			const propValue = options[propName];
+
+			if (propValue !== true) {
+				updatedCookie += "=" + propValue;
+			}
+		}
+
+		document.cookie = updatedCookie;
+	}
+
+	/**
+	* getCookie
+	* @name
+	*/
+	function getCookie(name) {
+		const matches = document.cookie.match(new RegExp(
+			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+		));
+
+		return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
     
     /**
     * xhr
@@ -196,6 +273,38 @@ window.onload = () => {
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.send(data.param + '=' + JSON.stringify(data.json));
     }
+
+    /**
+    * reloader
+    * @t
+    */ 
+	function reloader(t = 3) {
+		const reloadMsg = document.createElement('div');
+		const p1 = document.createElement('p');
+		const p2 = document.createElement('p');
+		const span = document.createElement('span');
+
+		reloadMsg.id = 'reload_msg';
+		span.id = 'time';
+
+		span.appendChild(document.createTextNode(t));
+		p1.appendChild(document.createTextNode('Настройки сохранены'));
+		p2.appendChild(document.createTextNode('Страница перезагрузится через '));
+		p2.appendChild(span);
+		p2.appendChild(document.createTextNode(' сек.'));
+		reloadMsg.appendChild(p1);
+		reloadMsg.appendChild(p2);
+		main.appendChild(reloadMsg);
+
+        let sI = setInterval(() => {
+        	t--;
+        	span.innerHTML = t;
+        	if (t <= 0) {
+        		clearInterval(sI);
+        		location.reload();
+        	}
+        }, 1000);
+	}
     
     /**
     * deleteChilds
@@ -221,18 +330,9 @@ window.onload = () => {
     }
     
     /**
-    * getHome
+    * renderPlanets
     */
-    function getHome() {
-		color('home', navColor);
-        main.innerHTML = '';
-        audio.style.display = 'none';
-	}
-    
-    /**
-    * getPlanets
-    */
-    function getPlanets() {
+    function renderPlanets() {
 		color(planets, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
         
@@ -272,9 +372,9 @@ window.onload = () => {
 	}
     
     /**
-    * getFlight
+    * renderFlight
     */
-    function getFlight() {
+    function renderFlight() {
 		color(flight, navColor);
         
         let descktopControls = '',
@@ -327,9 +427,9 @@ window.onload = () => {
 	}
     
     /**
-    * getSounds
+    * renderSounds
     */
-    function getSounds() {
+    function renderSounds() {
 		color(sounds, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
         
@@ -357,9 +457,9 @@ window.onload = () => {
 	}
     
     /**
-    * getChat
+    * renderChat
     */
-    function getChat() {
+    function renderChat() {
 		color(chat, navColor);
         
         main.innerHTML = `
@@ -402,9 +502,9 @@ window.onload = () => {
 	}
     
     /**
-    * getContacts
+    * renderContacts
     */
-    function getContacts() {
+    function renderContacts() {
 		color(contacts, navColor);
         
 		main.innerHTML = `
@@ -429,29 +529,110 @@ window.onload = () => {
 	}
     
     /**
-    * getSettings
+    * renderSettings
     */
-    function getSettings() {
+    function renderSettings() {
 		color(settings, navColor);
         
 		main.innerHTML = `
             <div id="settings_panel">
-				<label>
-					<input type="checkbox" class="antialias">
-					Антиалиас
-				</label>
+            	<div id="settings_panel-header">
+            		<p>настройки</p>
+            	</div>
+            	<div id="settings_panel-body">
+            		<ul class="bl">
+	            		<p>Управление</p>
+						<li>
+							<input type="checkbox" id="invert_y" />
+							Инверсия оси Y
+						</li>
+						<li>
+							<input type="range" id="mouse_sensitivity" min="0" max="9" step="1"/><br />
+							Чувствительность мыши
+						</li>
+					</ul>
+	            	<ul class="bl">
+	            		<p>Графика</p>
+						<li>
+							<input type="checkbox" id="antialias" />
+							Антиалиасинг
+						</li>
+						<li>
+							<input type="range" id="textures" min="0" max="2" step="1"/><br />
+							Качество текстур
+						</li>
+						<li>
+							<input type="range" id="graphics" min="0" max="2" step="1"/><br />
+							Качество графики
+						</li>
+					</ul>
+            	</div>
+				<div  id="settings_panel-footer">
+					<input type="button" class="accept-changes" value="Сохранить" />
+            	</div>
             </div>
         `;
         
         audio.style.display = 'none';
 
-	    let antialias = document.getElementsByClassName('antialias')[0],
-	    	canvas = document.getElementsByTagName('canvas')[0];
+    	const elementInvert_y = document.getElementById('invert_y');
+    	const elementAntialias = document.getElementById('antialias');
+    	const elementTextures = document.getElementById('textures');
+    	const elementGraphics = document.getElementById('graphics');
 
-	    antialias.addEventListener('click', function () {
-	    	//
-	    });
+    	elementInvert_y.checked = !!(+getCookie('invert_y'));
+    	elementAntialias.checked = !!(+getCookie('antialias'));
+    	elementTextures.value = getCookie('textures');
+    	elementGraphics.value = getCookie('graphics');
+
+        document.getElementsByClassName('accept-changes')[0].addEventListener('click', () => {
+        	// Graphics
+        	if (
+        		elementAntialias.checked !== !!(+getCookie('antialias'))
+        		|| elementTextures.value !== getCookie('textures')
+        		|| elementGraphics.value !== getCookie('graphics')
+    		) {
+        		setCookie('invert_y', +elementInvert_y.checked);
+        		setCookie('antialias', +elementAntialias.checked);
+        		setCookie('textures', elementTextures.value);
+        		setCookie('graphics', elementGraphics.value);
+
+	        	reloader();
+        	}
+
+    		// Controls
+    		else if (elementInvert_y.checked !== !!(+getCookie('invert_y'))) {
+        		setCookie('invert_y', +elementInvert_y.checked);
+
+        		const reloadMsg = document.createElement('div');
+        		const p = document.createElement('p');
+
+        		reloadMsg.id = 'reload_msg';
+
+        		p.appendChild(document.createTextNode('Настройки сохранены'));
+        		reloadMsg.appendChild(p);
+        		main.appendChild(reloadMsg);
+
+        		setTimeout(() => {
+        			reloadMsg.remove();
+        		}, 2000);
+        	}
+        });
 	}
 
-	solarSystem();
+	switch (getCookie('graphics')) {
+		case '0': graphics = 2; break;
+		case '1': graphics = 1; break;
+		case '2': graphics = 1 / 2; break;
+	}
+
+	switch (getCookie('textures')) {
+		case '0': textures = 'low'; break;
+		case '1': textures = 'medium'; break;
+		case '2': textures = 'high'; break;
+	}
+
+	solarSystem(!!(+antialias), textures, graphics);
+
+	//document.getElementsByClassName('preloader')[0].remove();
 };
