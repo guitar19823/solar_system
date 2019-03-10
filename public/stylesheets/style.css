@@ -587,33 +587,33 @@ canvas {
 }
 
 #mouse > div:nth-child(1) > div {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #ccc;
-    -webkit-box-shadow: 0 0 7px #eee;
-            box-shadow: 0 0 7px #eee;
-    margin: 6px 0 0 4px;
+    background: #71AA67FF;
+    -webkit-box-shadow: 0 0 7px #71AA67FF;
+            box-shadow: 0 0 7px #71AA67FF;
+    margin: 6px 0 0 3px;
 }
 
 #mouse > div:nth-child(2) > div {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #ccc;
-    -webkit-box-shadow: 0 0 7px #eee;
-            box-shadow: 0 0 7px #eee;
-    margin: 6px 0 0 7px;
+    background: #71AA67FF;
+    -webkit-box-shadow: 0 0 7px #71AA67FF;
+            box-shadow: 0 0 7px #71AA67FF;
+    margin: 6px 0 0 8px;
 }
 
 #mouse > div:nth-child(3) > div {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #ccc;
-    -webkit-box-shadow: 0 0 7px #eee;
-            box-shadow: 0 0 7px #eee;
-    margin: 3px -1px;
+    background: #71AA67FF;
+    -webkit-box-shadow: 0 0 7px #71AA67FF;
+            box-shadow: 0 0 7px #71AA67FF;
+    margin: 3px -2px;
 }
 
 #speedControl {
