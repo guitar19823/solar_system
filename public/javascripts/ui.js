@@ -428,8 +428,8 @@ window.onload = () => {
             <div id="control">
                 <div>
 					<p>w</p>
-	                <p>s</p>
 	                <p>a</p>
+	                <p>s</p>
 	                <p>d</p>
             	</div>
                 <div>
