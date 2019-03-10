@@ -659,7 +659,7 @@ window.onload = () => {
         		messageBox('Настройки сохранены');
         	}
 
-        	else {
+        	else if (document.getElementById('message_box') === null) {
         		messageBox('Нет изменений в настройках');
         	}
         });
