@@ -73,8 +73,9 @@ window.onload = () => {
         menuBtns = document.getElementsByClassName('menu_btns'),
         button_menu = document.getElementsByClassName('button_menu')[0],
         nav = document.getElementsByClassName('nav')[0],
-	    antialias = getCookie('antialias'),
 		invert_y = getCookie('invert_y'),
+		mouse_sensitivity = getCookie('mouse_sensitivity'),
+	    antialias = getCookie('antialias'),
 		textures = getCookie('textures'),
 		graphics = getCookie('graphics'),
         textColor = [],
@@ -103,8 +104,18 @@ window.onload = () => {
     }
 
     if (invert_y === undefined) {
-    	invert_y = '1';
-    	setCookie('invert_y', '1');
+    	if (mobileDevice()) {
+    		invert_y = '0';
+    		setCookie('invert_y', '0');
+	   	} else {
+	    	invert_y = '1';
+	    	setCookie('invert_y', '1');
+	    }
+    }
+
+    if (mouse_sensitivity === undefined) {
+    	mouse_sensitivity = '9';
+    	setCookie('mouse_sensitivity', '9');
     }
 
     if (textures === undefined) {
@@ -276,20 +287,20 @@ window.onload = () => {
 
     /**
     * reloader
-    * @t
+    * @time
     */ 
-	function reloader(t = 3) {
+	function reloader(time = 3) {
 		const reloadMsg = document.createElement('div');
 		const p1 = document.createElement('p');
 		const p2 = document.createElement('p');
 		const span = document.createElement('span');
 
-		reloadMsg.id = 'reload_msg';
+		reloadMsg.id = 'message_box';
 		span.id = 'time';
 
-		span.appendChild(document.createTextNode(t));
+		span.appendChild(document.createTextNode(time));
 		p1.appendChild(document.createTextNode('Настройки сохранены'));
-		p2.appendChild(document.createTextNode('Страница перезагрузится через '));
+		p2.appendChild(document.createTextNode('Программа перезагрузится через '));
 		p2.appendChild(span);
 		p2.appendChild(document.createTextNode(' сек.'));
 		reloadMsg.appendChild(p1);
@@ -297,13 +308,33 @@ window.onload = () => {
 		main.appendChild(reloadMsg);
 
         let sI = setInterval(() => {
-        	t--;
-        	span.innerHTML = t;
-        	if (t <= 0) {
+        	time--;
+        	span.innerHTML = time;
+        	if (time <= 0) {
         		clearInterval(sI);
         		location.reload();
         	}
         }, 1000);
+	}
+
+	/**
+    * messageBox
+    * @message
+    * @delay
+    */ 
+	function messageBox(message, delay = 1500) {
+		const reloadMsg = document.createElement('div');
+		const p = document.createElement('p');
+
+		reloadMsg.id = 'message_box';
+
+		p.appendChild(document.createTextNode(message));
+		reloadMsg.appendChild(p);
+		main.appendChild(reloadMsg);
+
+		setTimeout(() => {
+			reloadMsg.remove();
+		}, delay);
 	}
     
     /**
@@ -391,21 +422,38 @@ window.onload = () => {
                 <div id="areaTouchMove"></div>
                 <input type="range" min="0" max="299792" value="1700" id="range">
             </div>
+            <div id="speedControl"></div>
+            <div id="arrow"></div>
         ` : `
             <div id="control">
-                <p>w-вперед</p>
-                <p>s-назад</p>
-                <p>a-налево</p>
-                <p>d-направо</p>
-                <p>mousemove</p>
-                <p>mousewheel</p>
+                <div>
+					<p>w</p>
+	                <p>s</p>
+	                <p>a</p>
+	                <p>d</p>
+            	</div>
+                <div>
+                	<div></div>
+	                <div id="mouse">
+	                	<div><div></div></div>
+	                	<div></div>
+	                	<div></div>
+	                </div>
+	                <div></div>
+                </div>
+            </div>
+            <div id="speedControl"></div>
+            <div id="scroll">
+            	<div id="mouse">
+                	<div></div>
+                	<div></div>
+                	<div><div></div></div>
+                </div>
             </div>
         `;
         
         main.innerHTML = `
             ${descktopControls}
-            <div id="speedControl"></div>
-            <div id="arrow"></div>
             ${moover}
         `;
         
@@ -547,8 +595,8 @@ window.onload = () => {
 							Инверсия оси Y
 						</li>
 						<li>
-							<input type="range" id="mouse_sensitivity" min="0" max="9" step="1"/><br />
 							Чувствительность мыши
+							<br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>
 						</li>
 					</ul>
 	            	<ul class="bl">
@@ -558,12 +606,12 @@ window.onload = () => {
 							Антиалиасинг
 						</li>
 						<li>
-							<input type="range" id="textures" min="0" max="2" step="1"/><br />
 							Качество текстур
+							<br /><input type="range" id="textures" min="0" max="2" step="1"/>
 						</li>
 						<li>
-							<input type="range" id="graphics" min="0" max="2" step="1"/><br />
 							Качество графики
+							<br /><input type="range" id="graphics" min="0" max="2" step="1"/>
 						</li>
 					</ul>
             	</div>
@@ -575,12 +623,14 @@ window.onload = () => {
         
         audio.style.display = 'none';
 
-    	const elementInvert_y = document.getElementById('invert_y');
+    	const elementInvertY = document.getElementById('invert_y');
+    	const elementMouseSensitivity = document.getElementById('mouse_sensitivity');
     	const elementAntialias = document.getElementById('antialias');
     	const elementTextures = document.getElementById('textures');
     	const elementGraphics = document.getElementById('graphics');
 
-    	elementInvert_y.checked = !!(+getCookie('invert_y'));
+    	elementInvertY.checked = !!(+getCookie('invert_y'));
+    	elementMouseSensitivity.value = getCookie('mouse_sensitivity');
     	elementAntialias.checked = !!(+getCookie('antialias'));
     	elementTextures.value = getCookie('textures');
     	elementGraphics.value = getCookie('graphics');
@@ -592,7 +642,8 @@ window.onload = () => {
         		|| elementTextures.value !== getCookie('textures')
         		|| elementGraphics.value !== getCookie('graphics')
     		) {
-        		setCookie('invert_y', +elementInvert_y.checked);
+        		setCookie('invert_y', +elementInvertY.checked);
+        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
         		setCookie('antialias', +elementAntialias.checked);
         		setCookie('textures', elementTextures.value);
         		setCookie('graphics', elementGraphics.value);
@@ -601,21 +652,15 @@ window.onload = () => {
         	}
 
     		// Controls
-    		else if (elementInvert_y.checked !== !!(+getCookie('invert_y'))) {
-        		setCookie('invert_y', +elementInvert_y.checked);
+    		else if (elementInvertY.checked !== !!(+getCookie('invert_y')) || elementMouseSensitivity.value !== getCookie('mouse_sensitivity')) {
+        		setCookie('invert_y', +elementInvertY.checked);
+        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
 
-        		const reloadMsg = document.createElement('div');
-        		const p = document.createElement('p');
+        		messageBox('Настройки сохранены');
+        	}
 
-        		reloadMsg.id = 'reload_msg';
-
-        		p.appendChild(document.createTextNode('Настройки сохранены'));
-        		reloadMsg.appendChild(p);
-        		main.appendChild(reloadMsg);
-
-        		setTimeout(() => {
-        			reloadMsg.remove();
-        		}, 2000);
+        	else {
+        		messageBox('Нет изменений в настройках');
         	}
         });
 	}

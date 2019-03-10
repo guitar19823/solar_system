@@ -73,7 +73,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             let dir = this.direction + Math.PI,
                 zA = Math.cos(this.angle),
                 vx = -zA * Math.sin(dir),
-                vy = !!(+getCookie('invert_y')) ? Math.sin(this.angle) : -Math.sin(this.angle),
+                vy = Math.sin(this.angle),
                 vz = zA * Math.cos(dir);
             
             this.camera.position.set(vx * this.distance + this.x, vy * this.distance + this.y, vz * this.distance + this.z);
@@ -341,6 +341,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
     
     // Flight controls
     function flightControl() {
+        const sensivity = getCookie('mouse_sensitivity') / 5;
         lookAtPlanet(null);
         flightCam = true;
         
@@ -398,12 +399,16 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 startY = event.changedTouches[0].clientY;
 
 				if (controls != null) {
-                    controls.angle += touchYRel * 0.007;
+                    !!(+getCookie('invert_y')) ? (
+                        controls.angle -= touchYRel * 0.007 * sensivity
+                    ) : (
+                        controls.angle += touchYRel * 0.007 * sensivity
+                    );
 
                     if (controls.angle > Math.PI * 5 / 11) controls.angle = Math.PI * 5 / 11;
                     else if (controls.angle < -Math.PI * 5 / 11) controls.angle = -Math.PI * 5 / 11;
 
-                    controls.direction += touchXRel * 0.007;
+                    controls.direction += touchXRel * 0.007 * sensivity;
                     controls.updateCamera();
                 }
 			}
@@ -448,12 +453,16 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 			document.addEventListener('mousedown', function () {
 				if (controls != null) {
                     document.onmousemove = function (event) {
-                        controls.angle -= event.movementY * 0.002;
+                        !!(+getCookie('invert_y')) ? (
+                            controls.angle -= event.movementY * 0.002 * sensivity
+                        ) : (
+                            controls.angle += event.movementY * 0.002 * sensivity
+                        );
                         
                         if (controls.angle > Math.PI * 5 / 11) controls.angle = Math.PI * 5 / 11;
                         else if (controls.angle < -Math.PI * 5 / 11) controls.angle = -Math.PI * 5 / 11;
                         
-                        controls.direction += event.movementX * 0.002;
+                        controls.direction += event.movementX * 0.002 * sensivity;
                         controls.updateCamera();
                     }
                 }
@@ -518,7 +527,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         let objectsNames = document.getElementsByClassName('planet');
         
         for (let i = 0, l = objectsNames.length; i < l; i++) {
-            objectsNames[i].addEventListener('click', function () {lookAtPlanet(i)})
+            objectsNames[i].addEventListener('click', () => lookAtPlanet(i))
         }
     }
     
@@ -531,7 +540,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             ['sounds', doNotFlyLookAtRandomPlanet],
             ['chat', doNotFlyLookAtRandomPlanet],
             ['contacts', doNotFlyLookAtEarth],
-            ['settings', doNotFlyLookAtRandomPlanet]
+            ['settings', doNotFlyLookAtSelectedPlanet]
         ];
         
         arr.map(function (element) {
@@ -544,6 +553,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             case '/objects': doNotFlyLookAtSelectedPlanet(); break;
             case '/flight': flightControl(); break;
             case '/contacts': doNotFlyLookAtEarth(); break;
+            case '/settings': doNotFlyLookAtSelectedPlanet(); break;
             default: doNotFlyLookAtRandomPlanet();
         }
     });
