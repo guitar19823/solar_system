@@ -346,8 +346,8 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         flightCam = true;
         
         if (mobileDevice()) {
-			let speedControl = document.getElementById('speedControl'),
-                range = document.getElementById('range');
+			const speedControl = document.getElementById('speedControl');
+            const range = document.getElementById('range');
             
 			range.addEventListener('input', function () {
                 speed = range.value / 8922394.583;
@@ -364,12 +364,13 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             controls.updateCamera();
 
 			let startX,
-                startY,
-                areaTouchMove = document.getElementById('areaTouchMove'),
-                forward = document.getElementById('forward'),
-                backward = document.getElementById('backward'),
-                left = document.getElementById('left'),
-                right = document.getElementById('right');
+                startY;
+
+            const areaTouchMove = document.getElementById('areaTouchMove');
+            const forward = document.getElementById('forward');
+            const backward = document.getElementById('backward');
+            const left = document.getElementById('left');
+            const right = document.getElementById('right');
             
 			areaTouchMove.addEventListener('touchstart', touchStart, false);
 			areaTouchMove.addEventListener('touchend', touchEnd, false);
@@ -431,7 +432,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 }
             });
 		} else {
-			let speedControl = document.getElementById('speedControl');
+			const speedControl = document.getElementById('speedControl');
 			document.addEventListener('wheel', function (event) {
 				if (speed >= 0.0000005 && speed < 0.00001) speed -= event.deltaY / 1000000000;
                 if (speed >= 0.00001 && speed < 0.0001) speed -= event.deltaY / 100000000;
@@ -524,7 +525,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 		flightCam = false;
 		controls = null;
         
-        let objectsNames = document.getElementsByClassName('planet');
+        const objectsNames = document.getElementsByClassName('planet');
         
         for (let i = 0, l = objectsNames.length; i < l; i++) {
             objectsNames[i].addEventListener('click', () => lookAtPlanet(i))

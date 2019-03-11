@@ -11,8 +11,9 @@ window.onload = () => {
         socket.disconnect();
     }
     
-    let container = document.getElementsByClassName('container')[0],
-        year = new Date().getFullYear(),
+    const container = document.getElementsByClassName('container')[0];
+
+    let year = new Date().getFullYear(),
         timeout;
     
     year = year === 2018 ? year : '2018 - ' + year;
@@ -58,29 +59,22 @@ window.onload = () => {
         </footer>
     `;
     
-    let track = document.getElementById('track'),
-        system_sounds = document.getElementById('system_sounds'),
-        title = document.getElementById('title'),
-        audio = document.getElementById('audio'),
-        blackPanel = document.createElement('div'),
-        main = document.getElementById('main'),
-        chat = document.getElementById('chat'),
-        contacts = document.getElementById('contacts'),
-        settings = document.getElementById('settings'),
-        sounds = document.getElementById('sounds'),
-        flight = document.getElementById('flight'),
-        planets = document.getElementById('planets'),
-        menuBtns = document.getElementsByClassName('menu_btns'),
-        button_menu = document.getElementsByClassName('button_menu')[0],
-        nav = document.getElementsByClassName('nav')[0],
-		invert_y = getCookie('invert_y'),
-		mouse_sensitivity = getCookie('mouse_sensitivity'),
-	    antialias = getCookie('antialias'),
-		textures = getCookie('textures'),
-		graphics = getCookie('graphics'),
-        textColor = [],
-        navColor = [],
-        arrObj = [
+    const track = document.getElementById('track');
+    const system_sounds = document.getElementById('system_sounds');
+    const title = document.getElementById('title');
+    const audio = document.getElementById('audio');
+    const blackPanel = document.createElement('div');
+    const main = document.getElementById('main');
+    const chat = document.getElementById('chat');
+    const contacts = document.getElementById('contacts');
+    const settings = document.getElementById('settings');
+    const sounds = document.getElementById('sounds');
+    const flight = document.getElementById('flight');
+    const planets = document.getElementById('planets');
+    const menuBtns = document.getElementsByClassName('menu_btns');
+    const button_menu = document.getElementsByClassName('button_menu')[0];
+    const nav = document.getElementsByClassName('nav')[0];
+    const arrObj = [
             ['sun', 'солнце'],
             ['mercury', 'меркурий'],
             ['venus', 'венера'],
@@ -95,6 +89,14 @@ window.onload = () => {
             ['charon', 'харон'],
             ['universe', 'космос']
         ];
+
+	let invert_y = getCookie('invert_y'),
+		mouse_sensitivity = getCookie('mouse_sensitivity'),
+	    antialias = getCookie('antialias'),
+		textures = getCookie('textures'),
+		graphics = getCookie('graphics'),
+        textColor = [],
+        navColor = [];
     
     blackPanel.id = 'black_panel';
 
@@ -378,8 +380,8 @@ window.onload = () => {
         main.innerHTML = objs;
         
         audio.style.display = 'none';
-        let planetList = document.getElementsByClassName('planet'),
-            description = document.getElementById('description');
+        const planetList = document.getElementsByClassName('planet');
+        const description = document.getElementById('description');
         
         for (let i = 0, l = planetList.length; i < l; i++ ) {
             textColor.push(planetList[i]);
@@ -434,7 +436,7 @@ window.onload = () => {
             	</div>
                 <div>
                 	<div></div>
-	                <div id="mouse">
+	                <div class="mouse">
 	                	<div><div></div></div>
 	                	<div></div>
 	                	<div></div>
@@ -444,7 +446,7 @@ window.onload = () => {
             </div>
             <div id="speedControl"></div>
             <div id="scroll">
-            	<div id="mouse">
+            	<div class="mouse">
                 	<div></div>
                 	<div></div>
                 	<div><div></div></div>
@@ -492,7 +494,7 @@ window.onload = () => {
         main.innerHTML = sTrs;
         
         audio.style.display = 'block';
-        let spaceTrack = document.getElementsByClassName('spaceTrack');
+        const spaceTrack = document.getElementsByClassName('spaceTrack');
         
         for (let i = 0, l = spaceTrack.length; i < l; i++) {
             textColor.push(spaceTrack[i]);
@@ -519,9 +521,9 @@ window.onload = () => {
         `;
         
         audio.style.display = 'none';
-        let messages = document.getElementById('messages'),
-            text = document.getElementById('text'),
-            button = document.getElementById('button');
+        const messages = document.getElementById('messages');
+        const text = document.getElementById('text');
+        const button = document.getElementById('button');
         
         msgs.reverse();
         messages.innerHTML = msgs.join('');
@@ -561,8 +563,8 @@ window.onload = () => {
         
         audio.style.display = 'none';
         
-		let contactDetails = document.createElement('p'),
-            feedback = document.getElementById('feedback');
+		const contactDetails = document.createElement('p');
+        const feedback = document.getElementById('feedback');
         
 		contactDetails.setAttribute('id', 'contactDetails');
 		feedback.appendChild(contactDetails);

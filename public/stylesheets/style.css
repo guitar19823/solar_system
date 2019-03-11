@@ -549,7 +549,7 @@ canvas {
     background: #ccc;
 }
 
-#mouse {
+.mouse {
     position: relative;
     width: 34px;
     height: 50px;
@@ -558,26 +558,26 @@ canvas {
     overflow: hidden;
 }
 
-#mouse > div {
+.mouse > div {
     position: absolute;
 }
 
-#mouse > div:nth-child(1),
-#mouse > div:nth-child(2) {
+.mouse > div:nth-child(1),
+.mouse > div:nth-child(2) {
     width: 16px;
     height: 20px;
     border-bottom: 1px solid #ccc;
 }
 
-#mouse > div:nth-child(1) {
+.mouse > div:nth-child(1) {
     left: 0;
 }
 
-#mouse > div:nth-child(2) {
+.mouse > div:nth-child(2) {
     right: 0;
 }
 
-#mouse > div:nth-child(3) {
+.mouse > div:nth-child(3) {
     width: 6px;
     height: 15px;
     border: 1px solid #ccc;
@@ -586,7 +586,7 @@ canvas {
     top: 3px;
 }
 
-#mouse > div:nth-child(1) > div {
+.mouse > div:nth-child(1) > div {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -596,7 +596,7 @@ canvas {
     margin: 6px 0 0 3px;
 }
 
-#mouse > div:nth-child(2) > div {
+.mouse > div:nth-child(2) > div {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -606,7 +606,7 @@ canvas {
     margin: 6px 0 0 8px;
 }
 
-#mouse > div:nth-child(3) > div {
+.mouse > div:nth-child(3) > div {
     width: 8px;
     height: 8px;
     border-radius: 50%;
