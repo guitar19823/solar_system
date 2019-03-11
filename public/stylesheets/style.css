@@ -450,8 +450,8 @@ canvas {
     -webkit-transform: translateX(-150%);
         -ms-transform: translateX(-150%);
             transform: translateX(-150%);
-    -webkit-animation: to-right .5s .5s both;
-    animation: to-right .5s .5s both;
+    -webkit-animation: to-right .5s .7s both;
+    animation: to-right .5s .7s both;
 }
 
 #list p, #tracks p {
@@ -621,8 +621,8 @@ canvas {
     right: 2vw;
     height: 1.5em;
     line-height: 1.5em;
-    -webkit-animation: to-left .5s .5s both;
-    animation: to-left .5s .5s both;
+    -webkit-animation: to-left .5s .7s both;
+    animation: to-left .5s .7s both;
 }
 
 #scroll {
@@ -630,8 +630,8 @@ canvas {
     width: 120px;
     top: 30px;
     right: 2vw;
-    -webkit-animation: to-left .5s .5s both;
-    animation: to-left .5s .5s both;
+    -webkit-animation: to-left .5s .7s both;
+    animation: to-left .5s .7s both;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -659,8 +659,8 @@ select {
     bottom: 10px;
     border-radius: 50%;
     overflow: hidden;
-    -webkit-animation: to-right_rotate .5s .5s both;
-    animation: to-right_rotate .5s .5s both;
+    -webkit-animation: to-right_rotate .5s .7s both;
+    animation: to-right_rotate .5s .7s both;
 }
 
 #moover > p {
@@ -704,8 +704,8 @@ select {
     -webkit-transform: translateX(150%);
         -ms-transform: translateX(150%);
             transform: translateX(150%);
-    -webkit-animation: to-left .5s .5s both;
-    animation: to-left .5s .5s both;
+    -webkit-animation: to-left .5s .7s both;
+    animation: to-left .5s .7s both;
 }
 
 #gamePad input[type=range] {
@@ -717,8 +717,8 @@ select {
     -webkit-transform: translateX(150%);
         -ms-transform: translateX(150%);
             transform: translateX(150%);
-    -webkit-animation: to-left .5s .5s both;
-    animation: to-left .5s .5s both;
+    -webkit-animation: to-left .5s .7s both;
+    animation: to-left .5s .7s both;
 }
 
 /* ------- GAMEPAD ------- */
@@ -765,8 +765,8 @@ select {
     border: 1px solid #ccc;
     top: 1vh;
     left: 50%;
-    -webkit-animation: element-scale .5s .5s both;
-    animation: element-scale .5s .5s both;
+    -webkit-animation: element-scale .5s .7s both;
+    animation: element-scale .5s .7s both;
 }
 
 #messages {
@@ -832,8 +832,8 @@ select {
     left: 2vw;
     height: 100%;
     width: 96vw;
-    -webkit-animation: contacts-scale .5s .5s both;
-    animation: contacts-scale .5s .5s both;
+    -webkit-animation: contacts-scale .5s .7s both;
+    animation: contacts-scale .5s .7s both;
 }
 
 #feedback img {
@@ -857,8 +857,8 @@ select {
     border: 1px solid #ccc;
     top: 1vh;
     left: 50%;
-    -webkit-animation: element-scale .5s .5s both;
-    animation: element-scale .5s .5s both;
+    -webkit-animation: element-scale .5s .7s both;
+    animation: element-scale .5s .7s both;
 }
 
 #settings_panel-header {
