@@ -140,11 +140,11 @@ window.onload = () => {
     });
     
     for (let i = 0, l = menuBtns.length; i < l; i++) {
-        menuBtns[i].addEventListener('mousedown', () => {
+        menuBtns[i].addEventListener('click', () => {
             system_sounds.src = `/sounds/2.mp3`;
             system_sounds.play();
         
-            closeNav();
+            setTimeout(closeNav, 200);
         });
         menuBtns[i].addEventListener('mouseover', () => {
             system_sounds.play();
