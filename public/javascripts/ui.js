@@ -144,7 +144,7 @@ window.onload = () => {
             system_sounds.src = `/sounds/2.mp3`;
             system_sounds.play();
         
-            setTimeout(closeNav, 200);
+            closeNav();
         });
         menuBtns[i].addEventListener('mouseover', () => {
             system_sounds.play();

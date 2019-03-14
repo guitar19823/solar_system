@@ -7,7 +7,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         height = window.innerHeight,
 		scene, camera, controls, renderer, texture,
 		space, sun, mercury, venus, earth, planetHalo, moon, mars, jupiter, saturn, uranus, neptune, pluto, charon,
-		ringSaturn1, ringSaturn2, ringUranus,
+		ringSaturn, ringUranus,
 		stars1, stars2, stars3, stars4, stars5,
 		time = new Date().getTime() / 1000,
         speed = 0.0002;
@@ -114,35 +114,12 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         // Lights
 		
         // Camera
-		camera = new THREE.PerspectiveCamera(50, width / height, 0.001, 50000000000);
+		camera = new THREE.PerspectiveCamera(65, width / height, 0.001, 50000000000);
         // Camera
-		
-        // Listener	
-		class Sound {
-			constructor(track, object) {
-				this.track = track, this.object = object;
-                this.init();
-			}
-			
-			init() {
-				let listener = new THREE.AudioListener();
-				this.object.add(listener);
-				let sound = new THREE.Audio(listener);
-				let audioLoader = new THREE.AudioLoader();
-				audioLoader.load(this.track, function(buffer) {
-					sound.setBuffer(buffer);
-					sound.setLoop(true);
-					sound.setVolume(0.5);
-					sound.play();
-				} );
-			}
-		}
-		//new Sound('/sounds/space3.mp3', camera);
-        // Listener
 		
 		// Space
 		let spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k),
-            spaceTexture = `/textures/spacetexture${textures}.jpg`;
+            spaceTexture = `/textures/space${textures}.jpg`;
 		
 		let textureLoader = new THREE.TextureLoader();
         spaceTexture = textureLoader.load(spaceTexture);
@@ -157,9 +134,10 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 		space.scale.x = -1;
 		space.scale.y = -1;
 		space.scale.z = -1;
-		space.rotation.x = 23.5 * Math.PI / 180;
-		space.rotation.y = 0;
-		space.rotation.z = Math.PI;
+        //space.rotation.x = 23.5 * Math.PI / 180;
+		space.rotation.x = -Math.PI * 0.37;
+		space.rotation.y = -Math.PI * 0.88;
+		space.rotation.z = Math.PI * 0.58;
 		scene.add(space);
 		// Space
 		
@@ -236,48 +214,44 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 			}
 		}
 		
-		mercury = new Planet(0.0163, 44 / k, `/textures/mercurytexture${textures}.jpg`);
-		venus = new Planet(0.0403, 60 / k, `/textures/venustexture${textures}.jpg`);
-		earth = new Planet(0.0425, 60 / k, `/textures/earthtexture${textures}.jpg`, true, 1.01 );//0.00425
-		moon = new Planet(0.0116, 44 / k, `/textures/moontexture${textures}.jpg`);
-		mars = new Planet(0.0226, 60 / k, `/textures/marstexture${textures}.jpg`);
-		jupiter = new Planet(0.4611, 180 / k, `/textures/jupitertexture${textures}.jpg`);
-		saturn = new Planet(0.3821, 180 / k, `/textures/saturntexture${textures}.jpg`);
-		uranus = new Planet(0.1684, 180 / k, `/textures/uranustexture${textures}.jpg`);
-		neptune = new Planet(0.167, 180 / k, `/textures/neptunetexture${textures}.jpg`);
-		pluto = new Planet(0.0079, 30 / k, `/textures/plutotexture${textures}.jpg`);
-		charon = new Planet(0.004, 30 / k, `/textures/charontexture${textures}.jpg`);
+		mercury = new Planet(0.0163, 44 / k, `/textures/mercury${textures}.jpg`);
+		venus = new Planet(0.0403, 60 / k, `/textures/venus${textures}.jpg`);
+		earth = new Planet(0.0425, 60 / k, `/textures/earth${textures}.jpg`, true, 1.01 );//0.00425
+		moon = new Planet(0.0116, 44 / k, `/textures/moon${textures}.jpg`);
+		mars = new Planet(0.0226, 60 / k, `/textures/mars${textures}.jpg`);
+		jupiter = new Planet(0.4611, 180 / k, `/textures/jupiter${textures}.jpg`);
+		saturn = new Planet(0.3821, 180 / k, `/textures/saturn${textures}.jpg`);
+		uranus = new Planet(0.1684, 180 / k, `/textures/uranus${textures}.jpg`);
+		neptune = new Planet(0.167, 180 / k, `/textures/neptune${textures}.jpg`);
+		pluto = new Planet(0.0079, 30 / k, `/textures/pluto${textures}.jpg`);
+		charon = new Planet(0.004, 30 / k, `/textures/charon${textures}.jpg`);
         // Planets
 		
         // Rings
-		class Ring {
-			constructor(count, innerRadius, deltaRadius, opacity) {
-				this.count = count, this.innerRadius = innerRadius, this.deltaRadius = deltaRadius, this.opacity = opacity;
+        class Ring {
+            constructor(radiusTop, radiusBottom, vheight, radialSegments, heightSegments, opacity, texture) {
+                this.radiusTop = radiusTop,
+                this.radiusBottom = radiusBottom,
+                this.vheight = vheight,
+                this.radialSegments = radialSegments,
+                this.heightSegments = heightSegments,
+                this.opacity = opacity,
+                this.texture = texture;
                 return this.init();
-			}
-			
-			init() {
-				let geometry = new THREE.Geometry();
-				for (let i = 0; i < this.count; i += Math.random()) {
-					let vertex = new THREE.Vector3();
-					vertex.x = Math.sin(Math.PI * i / 180) * (this.innerRadius + i / this.deltaRadius);
-					vertex.y = Math.random() / 100;
-					vertex.z = Math.cos(Math.PI * i / 180) * (this.innerRadius + i / this.deltaRadius);
-					geometry.vertices.push(vertex);
-				}
-				let material = new THREE.PointsMaterial({color: 0xffffff, size: 0.0001, sizeAttenuation: true, opacity: this.opacity, transparent: true}),
-                    ring = new THREE.Points(geometry, material);
-				ring.castShadow = true;
-				ring.receiveShadow = true;
-                scene.add(ring);
-				return ring;
-			}
-		}
-		
-		ringSaturn1 = new Ring(7000, 0.6, 40000, 0.4);
-		ringSaturn2 = new Ring(13000, 0.8, 110000, 0.1);
-		ringSaturn3 = new Ring(2000, 0.55, 50000, 0.05);
-		ringUranus = new Ring(3000, 0.27, 100000, 0.1);
+            }
+
+            init() {
+                let ringTexture = new THREE.TextureLoader().load(this.texture),
+                    geometry = new THREE.CylinderGeometry(this.radiusTop, this.radiusBottom, this.vheight, this.radialSegments, this.heightSegments, true),
+                    material = new THREE.MeshBasicMaterial( { map: ringTexture, color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: this.opacity } ),
+                    ring = new THREE.Mesh( geometry, material );
+                scene.add( ring );
+                return ring;
+            }
+        }      
+
+        ringSaturn = new Ring(0.43, 0.8, 0.0001, 100, 10, 0.5, `/textures/saturn_ring${textures}.png`);
+        ringUranus = new Ring(0.26, 0.34, 0.0001, 100, 10, 0.2, `/textures/uranus_ring${textures}.png`);
         // Rings
 		
 		window.addEventListener('resize', onWindowResize, false);
@@ -583,21 +557,11 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 		moon.position.x = earth.position.x + Math.cos(-time * 12.175 * speedPlanets) * 2.5627;
 		moon.position.z = earth.position.z + Math.sin(-time * 12.175 * speedPlanets) * 2.5627;
 		
-		ringSaturn1.position.x = saturn.position.x;
-		ringSaturn1.position.z = saturn.position.z;
-		ringSaturn1.rotation.x = saturn.rotation.x;
-		ringSaturn1.rotation.y -= (speedPlanets * 0.1 * 365.25 / 10759) * (Math.PI * 24123.42) / 360;
-		
-		ringSaturn2.position.x = saturn.position.x;
-		ringSaturn2.position.z = saturn.position.z;
-		ringSaturn2.rotation.x = saturn.rotation.x;
-		ringSaturn2.rotation.y -= (speedPlanets * 0.07 * 365.25 / 10759) * (Math.PI * 24231.42) / 360;
-		
-		ringSaturn3.position.x = saturn.position.x;
-		ringSaturn3.position.z = saturn.position.z;
-		ringSaturn3.rotation.x = saturn.rotation.x;
-		ringSaturn3.rotation.y -= (speedPlanets * 0.12 * 365.25 / 10759) * (Math.PI * 24231.42) / 360;
-		
+		ringSaturn.position.x = saturn.position.x;
+		ringSaturn.position.z = saturn.position.z;
+		ringSaturn.rotation.x = saturn.rotation.x;
+		ringSaturn.rotation.y -= (speedPlanets * 0.1 * 365.25 / 10759) * (Math.PI * 24123.42) / 360;
+
 		ringUranus.position.x = uranus.position.x;
 		ringUranus.position.z = uranus.position.z;
 		ringUranus.rotation.x = uranus.rotation.x;
