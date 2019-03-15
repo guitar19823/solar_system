@@ -70,11 +70,11 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         }
         
         updateCamera() {
-            let dir = this.direction + Math.PI,
-                zA = Math.cos(this.angle),
-                vx = -zA * Math.sin(dir),
-                vy = Math.sin(this.angle),
-                vz = zA * Math.cos(dir);
+            const dir = this.direction + Math.PI;
+            const zA = Math.cos(this.angle);
+            const vx = -zA * Math.sin(dir);
+            const vy = Math.sin(this.angle);
+            const vz = zA * Math.cos(dir);
             
             this.camera.position.set(vx * this.distance + this.x, vy * this.distance + this.y, vz * this.distance + this.z);
             this.camera.lookAt(new THREE.Vector3(this.x, this.y, this.z));
@@ -100,16 +100,20 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         // Scene
 		
         // Lights
-		let light = new THREE.PointLight(0xffffff, 1.5, 50000);
+		const light = new THREE.PointLight(0xffffff, 1.5, 50000);
+
 		light.position.set(0, 0, 0);
-		light.castShadow = true;
 		light.shadow.mapSize.width = 2048;
 		light.shadow.mapSize.height = 2048;
 		light.shadow.camera.near = 0.001;
 		light.shadow.camera.far = 50000;
+        light.castShadow = true;
 		scene.add(light);
+        //let helper = new THREE.CameraHelper( light.shadow.camera );
+        //scene.add(helper);
 		
-		let ambient = new THREE.AmbientLight(0x010101, 1);
+		const ambient = new THREE.AmbientLight(0x010101, 1);
+
 		scene.add(ambient);
         // Lights
 		
@@ -118,23 +122,24 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         // Camera
 		
 		// Space
-		let spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k),
-            spaceTexture = `/textures/space${textures}.jpg`;
-		
-		let textureLoader = new THREE.TextureLoader();
-        spaceTexture = textureLoader.load(spaceTexture);
+		const spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k);
+		const textureLoader = new THREE.TextureLoader();
+        const spaceTexture = textureLoader.load(`/textures/space${textures}.jpg`);
+        
+        spaceTexture.anisotropy = 10;
+
         textureLoader.manager.onLoad = function () {
             setTimeout(function () {
                 document.getElementsByClassName('preloader')[0].remove();
             }, 5000);
         }
-		spaceTexture.anisotropy = 10;
-		let spaceMaterial = new THREE.MeshBasicMaterial({map: spaceTexture, side: THREE.BackSide});
+
+		const spaceMaterial = new THREE.MeshBasicMaterial({ map: spaceTexture, side: THREE.BackSide });
+
 		space = new THREE.Mesh(spaceGeometry, spaceMaterial);
 		space.scale.x = -1;
 		space.scale.y = -1;
 		space.scale.z = -1;
-        //space.rotation.x = 23.5 * Math.PI / 180;
 		space.rotation.x = -Math.PI * 0.37;
 		space.rotation.y = -Math.PI * 0.88;
 		space.rotation.z = Math.PI * 0.58;
@@ -142,9 +147,10 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 		// Space
 		
 		// Sun
-		let sunShaderGeometry = new THREE.SphereBufferGeometry(4.638, 64 / k, 64 / k),
-            shaderCode = fragShader,
-            sunShaderMaterial = new THREE.ShaderMaterial({fragmentShader: shaderCode});
+		const sunShaderGeometry = new THREE.SphereBufferGeometry(4.638, 64 / k, 64 / k);
+        const shaderCode = fragShader;
+        const sunShaderMaterial = new THREE.ShaderMaterial({ fragmentShader: shaderCode });
+
 		sun = new THREE.Mesh(sunShaderGeometry, sunShaderMaterial);
 		scene.add(sun);
 		// Sun
@@ -184,15 +190,17 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 			}
 			
 			init() {
-				let planetTexture = new THREE.TextureLoader().load(this.texture);
+				const planetTexture = new THREE.TextureLoader().load(this.texture);
+
 				planetTexture.anisotropy = 7;
-				let planet = new THREE.Mesh(
+
+				const planet = new THREE.Mesh(
                     new THREE.SphereGeometry(this.radius, this.segments, this.segments),
                     new THREE.MeshPhongMaterial({map: planetTexture, color: 0xffffff})
                 );
                 
                 if (this.halo) {
-                    let halo = new THREE.Mesh(
+                    const halo = new THREE.Mesh(
                         new THREE.SphereBufferGeometry(this.radius * this.haloSize, this.segments, this.segments),
                         new THREE.ShaderMaterial({
                             uniforms: {},
@@ -214,17 +222,17 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 			}
 		}
 		
-		mercury = new Planet(0.0163, 44 / k, `/textures/mercury${textures}.jpg`);
-		venus = new Planet(0.0403, 60 / k, `/textures/venus${textures}.jpg`);
-		earth = new Planet(0.0425, 60 / k, `/textures/earth${textures}.jpg`, true, 1.01 );//0.00425
-		moon = new Planet(0.0116, 44 / k, `/textures/moon${textures}.jpg`);
-		mars = new Planet(0.0226, 60 / k, `/textures/mars${textures}.jpg`);
-		jupiter = new Planet(0.4611, 180 / k, `/textures/jupiter${textures}.jpg`);
-		saturn = new Planet(0.3821, 180 / k, `/textures/saturn${textures}.jpg`);
-		uranus = new Planet(0.1684, 180 / k, `/textures/uranus${textures}.jpg`);
-		neptune = new Planet(0.167, 180 / k, `/textures/neptune${textures}.jpg`);
-		pluto = new Planet(0.0079, 30 / k, `/textures/pluto${textures}.jpg`);
-		charon = new Planet(0.004, 30 / k, `/textures/charon${textures}.jpg`);
+		mercury = new Planet(0.0163, 44 / k, `/textures/mercury${textures}-min.jpg`);
+		venus = new Planet(0.0403, 60 / k, `/textures/venus${textures}-min.jpg`);
+		earth = new Planet(0.0425, 60 / k, `/textures/earth${textures}-min.jpg`, true, 1.01 );//0.00425
+		moon = new Planet(0.0116, 44 / k, `/textures/moon${textures}-min.jpg`);
+		mars = new Planet(0.0226, 60 / k, `/textures/mars${textures}-min.jpg`);
+		jupiter = new Planet(0.4611, 180 / k, `/textures/jupiter${textures}-min.jpg`);
+		saturn = new Planet(0.3821, 180 / k, `/textures/saturn${textures}-min.jpg`);
+		uranus = new Planet(0.1684, 180 / k, `/textures/uranus${textures}-min.jpg`);
+		neptune = new Planet(0.167, 180 / k, `/textures/neptune${textures}-min.jpg`);
+		pluto = new Planet(0.0079, 30 / k, `/textures/pluto${textures}-min.jpg`);
+		charon = new Planet(0.004, 30 / k, `/textures/charon${textures}-min.jpg`);
         // Planets
 		
         // Rings
@@ -241,16 +249,19 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             }
 
             init() {
-                let ringTexture = new THREE.TextureLoader().load(this.texture),
-                    geometry = new THREE.CylinderGeometry(this.radiusTop, this.radiusBottom, this.vheight, this.radialSegments, this.heightSegments, true),
-                    material = new THREE.MeshBasicMaterial( { map: ringTexture, color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: this.opacity } ),
-                    ring = new THREE.Mesh( geometry, material );
-                scene.add( ring );
+                const ringTexture = new THREE.TextureLoader().load(this.texture);
+                const geometry = new THREE.CylinderGeometry(this.radiusTop, this.radiusBottom, this.vheight, this.radialSegments, this.heightSegments, true);
+                const material = new THREE.MeshBasicMaterial({ map: ringTexture, color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: this.opacity });
+                const ring = new THREE.Mesh(geometry, material);
+
+                scene.add(ring);
+                ring.castShadow = true;
+                ring.receiveShadow = true;
                 return ring;
             }
         }      
 
-        ringSaturn = new Ring(0.43, 0.8, 0.0001, 100, 10, 0.5, `/textures/saturn_ring${textures}.png`);
+        ringSaturn = new Ring(0.43, 0.9, 0.0001, 100, 10, 0.5, `/textures/saturn_ring${textures}.png`);
         ringUranus = new Ring(0.26, 0.34, 0.0001, 100, 10, 0.2, `/textures/uranus_ring${textures}.png`);
         // Rings
 		
