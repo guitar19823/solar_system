@@ -129,8 +129,14 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         spaceTexture.anisotropy = 10;
 
         textureLoader.manager.onLoad = function () {
+            const preloader = document.getElementsByClassName('preloader')[0];
+
             setTimeout(function () {
-                document.getElementsByClassName('preloader')[0].remove();
+                preloader.classList.add('done');
+                
+                setTimeout(function () {
+                    preloader.remove();
+                }, 2000);
             }, 1000);
         }
 
