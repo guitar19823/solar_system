@@ -131,7 +131,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         textureLoader.manager.onLoad = function () {
             setTimeout(function () {
                 document.getElementsByClassName('preloader')[0].remove();
-            }, 5000);
+            }, 1000);
         }
 
 		const spaceMaterial = new THREE.MeshBasicMaterial({ map: spaceTexture, side: THREE.BackSide });
