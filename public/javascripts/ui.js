@@ -1,196 +1,143 @@
+'use strict';
+
 /* ************************************************ */
 /* **************** USER INTERFACE **************** */
 /* ************************************************ */
 
-window.onload = () => {
-    const socket = io();
-    
-    let msgs = ['<span>Hello User!</span>'];
-    
-    window.onunload = () => {
-        socket.disconnect();
-    }
-    
-    const container = document.getElementsByClassName('container')[0];
+window.onload = function () {
+    var socket = io();
 
-    let year = new Date().getFullYear(),
-        timeout;
-    
+    var msgs = ['<span>Hello User!</span>'];
+
+    window.onunload = function () {
+        socket.disconnect();
+    };
+
+    var container = document.getElementsByClassName('container')[0];
+
+    var year = new Date().getFullYear(),
+        timeout = void 0;
+
     year = year === 2018 ? year : '2018 - ' + year;
-    
+
     /**
     * mobileDevice
     */
     function mobileDevice() {
-        return navigator.userAgent.match(/Android/i) ||
-            navigator.userAgent.match(/webOS/i) ||
-            navigator.userAgent.match(/iPhone/i) ||
-            navigator.userAgent.match(/iPad/i) ||
-            navigator.userAgent.match(/iPod/i) ||
-            navigator.userAgent.match(/BlackBerry/i) ||
-            navigator.userAgent.match(/Windows Phone/i)
+        return navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i);
     }
-    
-    container.innerHTML = `
-        <header class="header">
-            <div class="button_menu">
-                <div></div>
-                <div></div>
-            </div>
-        </header>
-        <nav class="nav">
-            <p>Меню</p>
-            <ul>
-                <li class="menu_btns" id="planets">объекты</li>
-                <li class="menu_btns" id="flight">полет</li>
-                <li class="menu_btns" id="sounds">музыка</li>
-                <li class="menu_btns" id="chat">чат</li>
-                <li class="menu_btns" id="contacts">контакты</li>
-                <li class="menu_btns" id="settings">настройки</li>
-            </ul>
-        </nav>
-        <main id="main"></main>
-        <div id="audio">
-            <audio src="/sounds/space${parseInt(Math.random() * 27 + 1)}.mp3" controls id="track">Your browser does not support the audio element.</audio>
-        </div>
-        <audio id="system_sounds">Your browser does not support the audio element.</audio>
-        <footer class="footer">
-            <p>&copy; Copyright ${year}.</p>
-        </footer>
-    `;
-    
-    const track = document.getElementById('track');
-    const system_sounds = document.getElementById('system_sounds');
-    const title = document.getElementById('title');
-    const audio = document.getElementById('audio');
-    const blackPanel = document.createElement('div');
-    const main = document.getElementById('main');
-    const chat = document.getElementById('chat');
-    const contacts = document.getElementById('contacts');
-    const settings = document.getElementById('settings');
-    const sounds = document.getElementById('sounds');
-    const flight = document.getElementById('flight');
-    const planets = document.getElementById('planets');
-    const menuBtns = document.getElementsByClassName('menu_btns');
-    const button_menu = document.getElementsByClassName('button_menu')[0];
-    const nav = document.getElementsByClassName('nav')[0];
-    const arrObj = [
-            ['sun', 'солнце'],
-            ['mercury', 'меркурий'],
-            ['venus', 'венера'],
-            ['earth', 'земля'],
-            ['moon', 'луна'],
-            ['mars', 'марс'],
-            ['jupiter', 'юпитер'],
-            ['saturn', 'сатурн'],
-            ['uranus', 'уран'],
-            ['neptune', 'нептун'],
-            ['pluto', 'плутон'],
-            ['charon', 'харон'],
-            ['universe', 'космос']
-        ];
 
-	let invert_y = getCookie('invert_y'),
-		mouse_sensitivity = getCookie('mouse_sensitivity'),
-	    antialias = getCookie('antialias'),
-		textures = getCookie('textures'),
-		graphics = getCookie('graphics'),
+    container.innerHTML = '\n        <header class="header">\n            <div class="button_menu">\n                <div></div>\n                <div></div>\n            </div>\n        </header>\n        <nav class="nav">\n            <p>\u041C\u0435\u043D\u044E</p>\n            <ul>\n                <li class="menu_btns" id="planets">\u043E\u0431\u044A\u0435\u043A\u0442\u044B</li>\n                <li class="menu_btns" id="flight">\u043F\u043E\u043B\u0435\u0442</li>\n                <li class="menu_btns" id="sounds">\u043C\u0443\u0437\u044B\u043A\u0430</li>\n                <li class="menu_btns" id="chat">\u0447\u0430\u0442</li>\n                <li class="menu_btns" id="contacts">\u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B</li>\n                <li class="menu_btns" id="settings">\u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438</li>\n            </ul>\n        </nav>\n        <main id="main"></main>\n        <div id="audio">\n            <audio src="/sounds/space' + parseInt(Math.random() * 27 + 1) + '.mp3" controls id="track">Your browser does not support the audio element.</audio>\n        </div>\n        <audio id="system_sounds">Your browser does not support the audio element.</audio>\n        <footer class="footer">\n            <p>&copy; Copyright ' + year + '.</p>\n        </footer>\n    ';
+
+    var track = document.getElementById('track');
+    var system_sounds = document.getElementById('system_sounds');
+    var title = document.getElementById('title');
+    var audio = document.getElementById('audio');
+    var blackPanel = document.createElement('div');
+    var main = document.getElementById('main');
+    var chat = document.getElementById('chat');
+    var contacts = document.getElementById('contacts');
+    var settings = document.getElementById('settings');
+    var sounds = document.getElementById('sounds');
+    var flight = document.getElementById('flight');
+    var planets = document.getElementById('planets');
+    var menuBtns = document.getElementsByClassName('menu_btns');
+    var button_menu = document.getElementsByClassName('button_menu')[0];
+    var nav = document.getElementsByClassName('nav')[0];
+    var arrObj = [['sun', 'солнце'], ['mercury', 'меркурий'], ['venus', 'венера'], ['earth', 'земля'], ['moon', 'луна'], ['mars', 'марс'], ['jupiter', 'юпитер'], ['saturn', 'сатурн'], ['uranus', 'уран'], ['neptune', 'нептун'], ['pluto', 'плутон'], ['charon', 'харон'], ['universe', 'космос']];
+
+    var invert_y = getCookie('invert_y'),
+        mouse_sensitivity = getCookie('mouse_sensitivity'),
+        antialias = getCookie('antialias'),
+        textures = getCookie('textures'),
+        graphics = getCookie('graphics'),
         textColor = [],
         navColor = [];
-    
+
     blackPanel.id = 'black_panel';
 
     if (antialias === undefined) {
-    	antialias = '0';
-    	setCookie('antialias', '0');
+        antialias = '0';
+        setCookie('antialias', '0');
     }
 
     if (invert_y === undefined) {
-    	if (mobileDevice()) {
-    		invert_y = '0';
-    		setCookie('invert_y', '0');
-	   	} else {
-	    	invert_y = '1';
-	    	setCookie('invert_y', '1');
-	    }
+        if (mobileDevice()) {
+            invert_y = '0';
+            setCookie('invert_y', '0');
+        } else {
+            invert_y = '1';
+            setCookie('invert_y', '1');
+        }
     }
 
     if (mouse_sensitivity === undefined) {
-    	mouse_sensitivity = '9';
-    	setCookie('mouse_sensitivity', '9');
+        mouse_sensitivity = '9';
+        setCookie('mouse_sensitivity', '9');
     }
 
     if (textures === undefined) {
-    	if (mobileDevice()) {
-    		textures = '1';
-    		setCookie('textures', '1');
-		} else {
-    		textures = '2';
-    		setCookie('textures', '2');
-		}
+        if (mobileDevice()) {
+            textures = '1';
+            setCookie('textures', '1');
+        } else {
+            textures = '2';
+            setCookie('textures', '2');
+        }
     }
 
     if (graphics === undefined) {
-    	graphics = '1';
-    	setCookie('graphics', '1');
+        graphics = '1';
+        setCookie('graphics', '1');
     }
-    
+
     button_menu.addEventListener('click', function () {
         nav.classList.contains('to_top') ? closeNav() : openNav();
     });
-    
-    for (let i = 0, l = menuBtns.length; i < l; i++) {
-        menuBtns[i].addEventListener('click', () => {
-            system_sounds.src = `/sounds/2.mp3`;
+
+    for (var i = 0, l = menuBtns.length; i < l; i++) {
+        menuBtns[i].addEventListener('click', function () {
+            system_sounds.src = '/sounds/2.mp3';
             system_sounds.play();
-        
+
             closeNav();
         });
-        menuBtns[i].addEventListener('mouseover', () => {
+        menuBtns[i].addEventListener('mouseover', function () {
             system_sounds.play();
         });
-        
     }
-    
+
     /**
     * openNav
     */
     function openNav() {
-        system_sounds.src = `/sounds/1.mp3`;
-        nav.classList.add('to_top'),
-        button_menu.classList.add('rotate_button'),
-        button_menu.children[0].classList.add('turn_right'),
-        button_menu.children[1].classList.add('turn_left'),
-        container.appendChild(blackPanel)
+        system_sounds.src = '/sounds/1.mp3';
+        nav.classList.add('to_top'), button_menu.classList.add('rotate_button'), button_menu.children[0].classList.add('turn_right'), button_menu.children[1].classList.add('turn_left'), container.appendChild(blackPanel);
     }
-    
+
     /**
     * closeNav
     */
     function closeNav() {
-        nav.classList.remove('to_top'),
-        button_menu.classList.remove('rotate_button'),
-        button_menu.children[0].classList.remove('turn_right'),
-        button_menu.children[1].classList.remove('turn_left'),
-        setTimeout(function () {
+        nav.classList.remove('to_top'), button_menu.classList.remove('rotate_button'), button_menu.children[0].classList.remove('turn_right'), button_menu.children[1].classList.remove('turn_left'), setTimeout(function () {
             blackPanel.remove();
-        }, 500)
+        }, 500);
     }
-    
+
     /**
     * call
     */
     function call(item, uri, title, foo) {
         navColor.push(item);
-        item.addEventListener('click', () => {
+        item.addEventListener('click', function () {
             setTitle(title);
             foo();
-        })
+        });
     }
-    
+
     setTitle('Объекты солнечной системы');
     renderPlanets();
-    
+
     call(planets, 'objects', 'Объекты солнечной системы', renderPlanets);
     call(flight, 'flight', 'Полет по солнечной системе', renderFlight);
     call(sounds, 'sounds', 'Выбор фоновой музыки', renderSounds);
@@ -198,57 +145,57 @@ window.onload = () => {
     call(contacts, 'contacts', 'Контактные данные', renderContacts);
     call(settings, 'settings', 'Настройки', renderSettings);
 
-	/**
-	* setCookie
-	* @name
-	* @value
-	* @options
-	*/
-	function setCookie(name, value, options = { expires: 604800, path: '/' }) {
-		let expires = options.expires;
+    /**
+    * setCookie
+    * @name
+    * @value
+    * @options
+    */
+    function setCookie(name, value) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : { expires: 604800, path: '/' };
 
-		if (typeof expires == "number" && expires) {
-			const date = new Date();
+        var expires = options.expires;
 
-			date.setTime(date.getTime() + expires * 1000);
-			expires = options.expires = date;
-		}
+        if (typeof expires == "number" && expires) {
+            var date = new Date();
 
-		if (expires && expires.toUTCString) {
-			options.expires = expires.toUTCString();
-		}
+            date.setTime(date.getTime() + expires * 1000);
+            expires = options.expires = date;
+        }
 
-		value = encodeURIComponent(value);
+        if (expires && expires.toUTCString) {
+            options.expires = expires.toUTCString();
+        }
 
-		let updatedCookie = name + "=" + value;
+        value = encodeURIComponent(value);
 
-		for (let propName in options) {
-			updatedCookie += "; " + propName;
-			const propValue = options[propName];
+        var updatedCookie = name + "=" + value;
 
-			if (propValue !== true) {
-				updatedCookie += "=" + propValue;
-			}
-		}
+        for (var propName in options) {
+            updatedCookie += "; " + propName;
+            var propValue = options[propName];
 
-		document.cookie = updatedCookie;
-	}
+            if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+            }
+        }
 
-	/**
-	* getCookie
-	* @name
-	*/
-	function getCookie(name) {
-		const matches = document.cookie.match(new RegExp(
-			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-		));
+        document.cookie = updatedCookie;
+    }
 
-		return matches ? decodeURIComponent(matches[1]) : undefined;
-	}
-    
+    /**
+    * getCookie
+    * @name
+    */
+    function getCookie(name) {
+        var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
     /**
     * xhr
-    */  
+    */
     function xhr() {
         if (window.XMLHttpRequest) {
             try {
@@ -270,17 +217,15 @@ window.onload = () => {
         }
         return null;
     }
-    
+
     /**
     * ajax
     */
     function ajax(data) {
-        let request = xhr();
-        request.addEventListener('readystatechange', () => {
-            4 == request.readyState
-            && 200 == request.status
-            && (document.getElementById(data.elementId).innerHTML = request.responseText);
-        } );
+        var request = xhr();
+        request.addEventListener('readystatechange', function () {
+            4 == request.readyState && 200 == request.status && (document.getElementById(data.elementId).innerHTML = request.responseText);
+        });
 
         request.open(data.method, '/' + data.url, true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -290,396 +235,313 @@ window.onload = () => {
     /**
     * reloader
     * @time
-    */ 
-	function reloader(time = 3) {
-		const reloadMsg = document.createElement('div');
-		const p1 = document.createElement('p');
-		const p2 = document.createElement('p');
-		const span = document.createElement('span');
+    */
+    function reloader() {
+        var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
 
-		reloadMsg.id = 'message_box';
-		span.id = 'time';
+        var reloadMsg = document.createElement('div');
+        var p1 = document.createElement('p');
+        var p2 = document.createElement('p');
+        var span = document.createElement('span');
 
-		span.appendChild(document.createTextNode(time));
-		p1.appendChild(document.createTextNode('Настройки сохранены'));
-		p2.appendChild(document.createTextNode('Программа перезагрузится через '));
-		p2.appendChild(span);
-		p2.appendChild(document.createTextNode(' сек.'));
-		reloadMsg.appendChild(p1);
-		reloadMsg.appendChild(p2);
-		main.appendChild(reloadMsg);
+        reloadMsg.id = 'message_box';
+        span.id = 'time';
 
-        let sI = setInterval(() => {
-        	time--;
-        	span.innerHTML = time;
-        	if (time <= 0) {
-        		clearInterval(sI);
-        		location.reload();
-        	}
+        span.appendChild(document.createTextNode(time));
+        p1.appendChild(document.createTextNode('Настройки сохранены'));
+        p2.appendChild(document.createTextNode('Программа перезагрузится через '));
+        p2.appendChild(span);
+        p2.appendChild(document.createTextNode(' сек.'));
+        reloadMsg.appendChild(p1);
+        reloadMsg.appendChild(p2);
+        main.appendChild(reloadMsg);
+
+        var sI = setInterval(function () {
+            time--;
+            span.innerHTML = time;
+            if (time <= 0) {
+                clearInterval(sI);
+                location.reload();
+            }
         }, 1000);
-	}
+    }
 
-	/**
-    * messageBox
-    * @message
-    * @delay
-    */ 
-	function messageBox(message, delay = 1500) {
-		const reloadMsg = document.createElement('div');
-		const p = document.createElement('p');
+    /**
+       * messageBox
+       * @message
+       * @delay
+       */
+    function messageBox(message) {
+        var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1500;
 
-		reloadMsg.id = 'message_box';
+        var reloadMsg = document.createElement('div');
+        var p = document.createElement('p');
 
-		p.appendChild(document.createTextNode(message));
-		reloadMsg.appendChild(p);
-		main.appendChild(reloadMsg);
+        reloadMsg.id = 'message_box';
 
-		setTimeout(() => {
-			reloadMsg.remove();
-		}, delay);
-	}
-    
+        p.appendChild(document.createTextNode(message));
+        reloadMsg.appendChild(p);
+        main.appendChild(reloadMsg);
+
+        setTimeout(function () {
+            reloadMsg.remove();
+        }, delay);
+    }
+
     /**
     * deleteChilds
-    */ 
-	function deleteChilds(parent) {
-        parent.lastChild != void(0) && (parent.innerHTML = '', deleteChilds(parent));
-	}
-    
+    */
+    function deleteChilds(parent) {
+        parent.lastChild != void 0 && (parent.innerHTML = '', deleteChilds(parent));
+    }
+
     /**
     * color
     */
-	function color(object, array) {
+    function color(object, array) {
         array.map(function (elem) {
             elem.style.color = elem === object ? '#eee' : '#aaa';
         });
-	}
-    
+    }
+
     /**
     * setTitle
-    */ 
-    function setTitle(titleText){
+    */
+    function setTitle(titleText) {
         title.innerHTML = titleText;
     }
-    
+
     /**
     * renderPlanets
     */
     function renderPlanets() {
-		color(planets, navColor);
+        color(planets, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
-        
-        let objs;
-        
-        for (let i = 0, l = arrObj.length; i < l; i++) {
-            i == 0 && (objs = `<div id="list">`);
-            objs += `<p id="${arrObj[i][0]}" class="planet">${arrObj[i][1]}</p>`;
-            i == l - 1 && (objs += `</div><div id="description"><p></p></div>`);
+
+        var objs = void 0;
+
+        for (var _i = 0, _l = arrObj.length; _i < _l; _i++) {
+            _i == 0 && (objs = '<div id="list">');
+            objs += '<p id="' + arrObj[_i][0] + '" class="planet">' + arrObj[_i][1] + '</p>';
+            _i == _l - 1 && (objs += '</div><div id="description"><p></p></div>');
         }
-        
+
         main.innerHTML = objs;
-        
+
         audio.style.display = 'none';
-        const planetList = document.getElementsByClassName('planet');
-        const description = document.getElementById('description');
-        
-        for (let i = 0, l = planetList.length; i < l; i++ ) {
-            textColor.push(planetList[i]);
-            
-            planetList[i].addEventListener('click', function () {
+        var planetList = document.getElementsByClassName('planet');
+        var description = document.getElementById('description');
+
+        for (var _i2 = 0, _l2 = planetList.length; _i2 < _l2; _i2++) {
+            textColor.push(planetList[_i2]);
+
+            planetList[_i2].addEventListener('click', function () {
                 color(this, textColor);
                 deleteChilds(description);
-                
+
                 if (description.lastChild === null) {
                     ajax({
                         method: 'POST',
                         url: 'get_descriptions',
                         param: 'object',
                         json: { "object": this.getAttribute('id') },
-                        elementId: 'description' 
+                        elementId: 'description'
                     });
                 }
                 description.style.display = 'block';
             });
         }
-	}
-    
+    }
+
     /**
     * renderFlight
     */
     function renderFlight() {
-		color(flight, navColor);
-        
-        let descktopControls = '',
+        color(flight, navColor);
+
+        var descktopControls = '',
             moover = '';
-        
-        descktopControls = mobileDevice() ? `
-            <div id="gamePad">
-                <div id="moover">
-                    <p id="forward"></p>
-                    <p id="backward"></p>
-                    <p id="left"></p>
-                    <p id="right"></p>
-                </div>
-                <div id="areaTouchMove"></div>
-                <input type="range" min="0" max="299792" value="1700" id="range">
-            </div>
-            <div id="speedControl"></div>
-            <div id="arrow"></div>
-        ` : `
-            <div id="control">
-                <div>
-					<p>w</p>
-	                <p>a</p>
-	                <p>s</p>
-	                <p>d</p>
-            	</div>
-                <div>
-                	<div></div>
-	                <div class="mouse">
-	                	<div><div></div></div>
-	                	<div></div>
-	                	<div></div>
-	                </div>
-	                <div></div>
-                </div>
-            </div>
-            <div id="speedControl"></div>
-            <div id="scroll">
-            	<div class="mouse">
-                	<div></div>
-                	<div></div>
-                	<div><div></div></div>
-                </div>
-            </div>
-        `;
-        
-        main.innerHTML = `
-            ${descktopControls}
-            ${moover}
-        `;
-        
+
+        descktopControls = mobileDevice() ? '\n            <div id="gamePad">\n                <div id="moover">\n                    <p id="forward"></p>\n                    <p id="backward"></p>\n                    <p id="left"></p>\n                    <p id="right"></p>\n                </div>\n                <div id="areaTouchMove"></div>\n                <input type="range" min="0" max="299792" value="1700" id="range">\n            </div>\n            <div id="speedControl"></div>\n            <div id="arrow"></div>\n        ' : '\n            <div id="control">\n                <div>\n\t\t\t\t\t<p>w</p>\n\t                <p>a</p>\n\t                <p>s</p>\n\t                <p>d</p>\n            \t</div>\n                <div>\n                \t<div></div>\n\t                <div class="mouse">\n\t                \t<div><div></div></div>\n\t                \t<div></div>\n\t                \t<div></div>\n\t                </div>\n\t                <div></div>\n                </div>\n            </div>\n            <div id="speedControl"></div>\n            <div id="scroll">\n            \t<div class="mouse">\n                \t<div></div>\n                \t<div></div>\n                \t<div><div></div></div>\n                </div>\n            </div>\n        ';
+
+        main.innerHTML = '\n            ' + descktopControls + '\n            ' + moover + '\n        ';
+
         audio.style.display = 'none';
-	}
-    
+    }
+
     /**
     * getSelect
     */
     function getSelect() {
-        let options = '',
+        var options = '',
             length = arrObj.length - 1;
-        
+
         arrObj.map(function (object, i) {
-            i < length && (options += `<option value="${object[0]}">${object[1]}</option>`);
+            i < length && (options += '<option value="' + object[0] + '">' + object[1] + '</option>');
         });
-        
-		return `<select>${options}</select>`;
-	}
-    
+
+        return '<select>' + options + '</select>';
+    }
+
     /**
     * renderSounds
     */
     function renderSounds() {
-		color(sounds, navColor);
+        color(sounds, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
-        
-        let sTrs;
-        
-        for (let i = 1; i <= 28; i++) {
-            i == 1 && (sTrs = `<div id="tracks">`);
-            sTrs += `<p class="spaceTrack">space${i}</p>`;
-            i == 28 && (sTrs += `</div>`);
+
+        var sTrs = void 0;
+
+        for (var _i3 = 1; _i3 <= 28; _i3++) {
+            _i3 == 1 && (sTrs = '<div id="tracks">');
+            sTrs += '<p class="spaceTrack">space' + _i3 + '</p>';
+            _i3 == 28 && (sTrs += '</div>');
         }
-        
+
         main.innerHTML = sTrs;
-        
+
         audio.style.display = 'block';
-        const spaceTrack = document.getElementsByClassName('spaceTrack');
-        
-        for (let i = 0, l = spaceTrack.length; i < l; i++) {
-            textColor.push(spaceTrack[i]);
-            spaceTrack[i].addEventListener('click', function () {
+        var spaceTrack = document.getElementsByClassName('spaceTrack');
+
+        for (var _i4 = 0, _l3 = spaceTrack.length; _i4 < _l3; _i4++) {
+            textColor.push(spaceTrack[_i4]);
+            spaceTrack[_i4].addEventListener('click', function () {
                 color(this, textColor);
-                track.src = `/sounds/${this.innerHTML}.mp3`;
+                track.src = '/sounds/' + this.innerHTML + '.mp3';
                 track.play();
             });
         }
-	}
-    
+    }
+
     /**
     * renderChat
     */
     function renderChat() {
-		color(chat, navColor);
-        
-        main.innerHTML = `
-            <div id="chat_window">
-                <p id="messages"></p>
-                <input type="text" id="text" autocomplete="off">
-                <button id="button">отправить</button>
-            </div>
-        `;
-        
+        color(chat, navColor);
+
+        main.innerHTML = '\n            <div id="chat_window">\n                <p id="messages"></p>\n                <input type="text" id="text" autocomplete="off">\n                <button id="button">\u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C</button>\n            </div>\n        ';
+
         audio.style.display = 'none';
-        const messages = document.getElementById('messages');
-        const text = document.getElementById('text');
-        const button = document.getElementById('button');
-        
+        var messages = document.getElementById('messages');
+        var text = document.getElementById('text');
+        var button = document.getElementById('button');
+
         msgs.reverse();
         messages.innerHTML = msgs.join('');
         msgs.reverse();
-        
-        button.addEventListener('click', () => {
+
+        button.addEventListener('click', function () {
             if (text.value) {
                 socket.emit('message', {
                     msg: text.value
                 });
-                
+
                 text.value = '';
             }
         });
-        
+
         socket.removeEventListener('message');
-        socket.addEventListener('message', (msg) => {
+        socket.addEventListener('message', function (msg) {
             if (messages) {
-                msgs.push(`<span>${msg.msg}</span>`);
-                
+                msgs.push('<span>' + msg.msg + '</span>');
+
                 msgs.reverse();
                 messages.innerHTML = msgs.join('');
                 msgs.reverse();
             }
         });
-	}
-    
+    }
+
     /**
     * renderContacts
     */
     function renderContacts() {
-		color(contacts, navColor);
-        
-		main.innerHTML = `
-            <div id="feedback"></div>
-        `;
-        
+        color(contacts, navColor);
+
+        main.innerHTML = '\n            <div id="feedback"></div>\n        ';
+
         audio.style.display = 'none';
-        
-		const contactDetails = document.createElement('p');
-        const feedback = document.getElementById('feedback');
-        
-		contactDetails.setAttribute('id', 'contactDetails');
-		feedback.appendChild(contactDetails);
-        
+
+        var contactDetails = document.createElement('p');
+        var feedback = document.getElementById('feedback');
+
+        contactDetails.setAttribute('id', 'contactDetails');
+        feedback.appendChild(contactDetails);
+
         ajax({
             method: 'POST',
             url: 'get_contacts',
             param: 'contacts',
-            json: {"contacts": true},
-            elementId: 'contactDetails' 
+            json: { "contacts": true },
+            elementId: 'contactDetails'
         });
-	}
-    
+    }
+
     /**
     * renderSettings
     */
     function renderSettings() {
-		color(settings, navColor);
-        
-		main.innerHTML = `
-            <div id="settings_panel">
-            	<div id="settings_panel-header">
-            		<p>настройки</p>
-            	</div>
-            	<div id="settings_panel-body">
-            		<ul class="bl">
-	            		<p>Управление</p>
-						<li>
-							<input type="checkbox" id="invert_y" />
-							Инверсия оси Y
-						</li>
-						<li>
-							Чувствительность мыши
-							<br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>
-						</li>
-					</ul>
-	            	<ul class="bl">
-	            		<p>Графика</p>
-						<li>
-							<input type="checkbox" id="antialias" />
-							Антиалиасинг
-						</li>
-						<li>
-							Качество текстур
-							<br /><input type="range" id="textures" min="0" max="2" step="1"/>
-						</li>
-						<li>
-							Качество графики
-							<br /><input type="range" id="graphics" min="0" max="2" step="1"/>
-						</li>
-					</ul>
-            	</div>
-				<div  id="settings_panel-footer">
-					<input type="button" class="accept-changes" value="Сохранить" />
-            	</div>
-            </div>
-        `;
-        
+        color(settings, navColor);
+
+        main.innerHTML = '\n            <div id="settings_panel">\n            \t<div id="settings_panel-header">\n            \t\t<p>\u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438</p>\n            \t</div>\n            \t<div id="settings_panel-body">\n            \t\t<ul class="bl">\n\t            \t\t<p>\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435</p>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input type="checkbox" id="invert_y" />\n\t\t\t\t\t\t\t\u0418\u043D\u0432\u0435\u0440\u0441\u0438\u044F \u043E\u0441\u0438 Y\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\u0427\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043C\u044B\u0448\u0438\n\t\t\t\t\t\t\t<br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t            \t<ul class="bl">\n\t            \t\t<p>\u0413\u0440\u0430\u0444\u0438\u043A\u0430</p>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input type="checkbox" id="antialias" />\n\t\t\t\t\t\t\t\u0410\u043D\u0442\u0438\u0430\u043B\u0438\u0430\u0441\u0438\u043D\u0433\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\u041A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0442\u0435\u043A\u0441\u0442\u0443\u0440\n\t\t\t\t\t\t\t<br /><input type="range" id="textures" min="0" max="2" step="1"/>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\u041A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0433\u0440\u0430\u0444\u0438\u043A\u0438\n\t\t\t\t\t\t\t<br /><input type="range" id="graphics" min="0" max="2" step="1"/>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n            \t</div>\n\t\t\t\t<div  id="settings_panel-footer">\n\t\t\t\t\t<input type="button" class="accept-changes" value="\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C" />\n            \t</div>\n            </div>\n        ';
+
         audio.style.display = 'none';
 
-    	const elementInvertY = document.getElementById('invert_y');
-    	const elementMouseSensitivity = document.getElementById('mouse_sensitivity');
-    	const elementAntialias = document.getElementById('antialias');
-    	const elementTextures = document.getElementById('textures');
-    	const elementGraphics = document.getElementById('graphics');
+        var elementInvertY = document.getElementById('invert_y');
+        var elementMouseSensitivity = document.getElementById('mouse_sensitivity');
+        var elementAntialias = document.getElementById('antialias');
+        var elementTextures = document.getElementById('textures');
+        var elementGraphics = document.getElementById('graphics');
 
-    	elementInvertY.checked = !!(+getCookie('invert_y'));
-    	elementMouseSensitivity.value = getCookie('mouse_sensitivity');
-    	elementAntialias.checked = !!(+getCookie('antialias'));
-    	elementTextures.value = getCookie('textures');
-    	elementGraphics.value = getCookie('graphics');
+        elementInvertY.checked = !!+getCookie('invert_y');
+        elementMouseSensitivity.value = getCookie('mouse_sensitivity');
+        elementAntialias.checked = !!+getCookie('antialias');
+        elementTextures.value = getCookie('textures');
+        elementGraphics.value = getCookie('graphics');
 
-        document.getElementsByClassName('accept-changes')[0].addEventListener('click', () => {
-        	// Graphics
-        	if (
-        		elementAntialias.checked !== !!(+getCookie('antialias'))
-        		|| elementTextures.value !== getCookie('textures')
-        		|| elementGraphics.value !== getCookie('graphics')
-    		) {
-        		setCookie('invert_y', +elementInvertY.checked);
-        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
-        		setCookie('antialias', +elementAntialias.checked);
-        		setCookie('textures', elementTextures.value);
-        		setCookie('graphics', elementGraphics.value);
+        document.getElementsByClassName('accept-changes')[0].addEventListener('click', function () {
+            // Graphics
+            if (elementAntialias.checked !== !!+getCookie('antialias') || elementTextures.value !== getCookie('textures') || elementGraphics.value !== getCookie('graphics')) {
+                setCookie('invert_y', +elementInvertY.checked);
+                setCookie('mouse_sensitivity', elementMouseSensitivity.value);
+                setCookie('antialias', +elementAntialias.checked);
+                setCookie('textures', elementTextures.value);
+                setCookie('graphics', elementGraphics.value);
 
-	        	reloader();
-        	}
+                reloader();
+            }
 
-    		// Controls
-    		else if (elementInvertY.checked !== !!(+getCookie('invert_y')) || elementMouseSensitivity.value !== getCookie('mouse_sensitivity')) {
-        		setCookie('invert_y', +elementInvertY.checked);
-        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
+            // Controls
+            else if (elementInvertY.checked !== !!+getCookie('invert_y') || elementMouseSensitivity.value !== getCookie('mouse_sensitivity')) {
+                    setCookie('invert_y', +elementInvertY.checked);
+                    setCookie('mouse_sensitivity', elementMouseSensitivity.value);
 
-        		messageBox('Настройки сохранены');
-        	}
-
-        	else if (document.getElementById('message_box') === null) {
-        		messageBox('Нет изменений в настройках');
-        	}
+                    messageBox('Настройки сохранены');
+                } else if (document.getElementById('message_box') === null) {
+                    messageBox('Нет изменений в настройках');
+                }
         });
-	}
+    }
 
-	switch (getCookie('graphics')) {
-		case '0': graphics = 2; break;
-		case '1': graphics = 1; break;
-		case '2': graphics = 1 / 2; break;
-	}
+    switch (getCookie('graphics')) {
+        case '0':
+            graphics = 2;break;
+        case '1':
+            graphics = 1;break;
+        case '2':
+            graphics = 1 / 2;break;
+    }
 
-	switch (getCookie('textures')) {
-		case '0': textures = 'low'; break;
-		case '1': textures = 'medium'; break;
-		case '2': textures = 'high'; break;
-	}
+    switch (getCookie('textures')) {
+        case '0':
+            textures = 'low';break;
+        case '1':
+            textures = 'medium';break;
+        case '2':
+            textures = 'high';break;
+    }
 
-	solarSystem(!!(+antialias), textures, graphics);
+    solarSystem(!!+antialias, textures, graphics);
 
-	//document.getElementsByClassName('preloader')[0].remove();
+    //document.getElementsByClassName('preloader')[0].remove();
 };
