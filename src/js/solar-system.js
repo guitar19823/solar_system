@@ -7,22 +7,22 @@ const THREE = require('three');
 const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
     let width = window.innerWidth,
         height = window.innerHeight,
-		scene, camera, controls, renderer, texture,
-		space, sun, mercury, venus, earth, planetHalo, moon, mars, jupiter, saturn, uranus, neptune, pluto, charon,
-		ringSaturn, ringUranus,
-		stars1, stars2, stars3, stars4, stars5,
-		time = new Date().getTime() / 1000,
+        scene, camera, controls, renderer, texture,
+        space, sun, mercury, venus, earth, planetHalo, moon, mars, jupiter, saturn, uranus, neptune, pluto, charon,
+        ringSaturn, ringUranus,
+        stars1, stars2, stars3, stars4, stars5,
+        time = new Date().getTime() / 1000,
         speed = 0.0002;
 
     const rotationalSpeed = 0.02;
-	const speedPlanets = 1 / 10000000;
-	const k = mobileDevice() ? 2 * graphics : 1 * graphics;
-   	const fragShader = `
+    const speedPlanets = 1 / 10000000;
+    const k = mobileDevice() ? 2 * graphics : 1 * graphics;
+    const sunFragmentShader = `
         void main() {
            gl_FragColor = vec4(255.0, 249.0, 23.0, 1.0);
         }
     `;
-   	const vertexShader = `
+    const vertexShader = `
         varying vec3 vNormal;
         varying vec4 vector;
         void main() {
@@ -30,11 +30,11 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
         }
     `;
-   	const fragmentShader = `
+    const fragmentShader = `
         varying vec3 vNormal;
         varying vec4 vector;
         void main() {
-        vec4 v = vec4( vNormal, 0.0 );
+            vec4 v = vec4( vNormal, 0.0 );
             float intensity = pow( 0.7 - dot( vNormal, vec3( 0.0, 0.0, 0.0 ) ), 4.0 );
             gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.3 ) * intensity;
         }
@@ -64,7 +64,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             navigator.userAgent.match(/BlackBerry/i) ||
             navigator.userAgent.match(/Windows Phone/i)
     }
-	
+    
     // CameraControls
     class CameraControls {
         constructor( camera ) {
@@ -84,51 +84,48 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         }
     }
     // CameraControls
-	
+    
     /**
     * initScene
     */
     function initScene() {
         // Renderer
-		renderer = new THREE.WebGLRenderer({ antialias: antialias });
+        renderer = new THREE.WebGLRenderer({ antialias: antialias });
         renderer.setSize(width, height);
-		renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFShadowMap;
-		document.body.appendChild(renderer.domElement);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
         // Renderer
-		
-        // Scene
-		scene = new THREE.Scene();
-		scene.background = new THREE.Color(0x000000);
-        // Scene
-        // Lights
-		
-        // Camera
-		camera = new THREE.PerspectiveCamera(65, width / height, 0.001, 50000000000);
-        // Camera
-		
-        // Lights
-		const pointLight = new THREE.PointLight(0xffffff, 1.5, 50000);
-
-		pointLight.position.set(0, 0, 0);
-        pointLight.castShadow = true;
-		pointLight.shadow.mapSize.width = 1024;
-		pointLight.shadow.mapSize.height = 1024;
-		pointLight.shadow.camera.near = 0.5;
-		pointLight.shadow.camera.far = 50000;
-		scene.add(pointLight);
         
-        //const pointLightHelper = new THREE.PointLightHelper( pointLight, 50000 );
-        //scene.add( pointLightHelper );
-		
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+        // Scene
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        // Scene
+        
+        // Lights
+        const light = new THREE.PointLight(0xffffff, 1.2, 50000);
 
-		scene.add(ambientLight);
-		
-		// Space
-		const spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k);
-		const textureLoader = new THREE.TextureLoader();
+        light.position.set(0, 0, 0);
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        light.shadow.camera.near = 0.001;
+        light.shadow.camera.far = 50000;
+        light.castShadow = true;
+        scene.add(light);
+        //let helper = new THREE.CameraHelper( light.shadow.camera );
+        //scene.add(helper);
+        
+        const ambient = new THREE.AmbientLight(0x010101, 1);
+
+        scene.add(ambient);
+        // Lights
+        
+        // Camera
+        camera = new THREE.PerspectiveCamera(65, width / height, 0.001, 50000000000);
+        // Camera
+        
+        // Space
+        const spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k);
+        const textureLoader = new THREE.TextureLoader();
         const spaceTexture = textureLoader.load(`/img/space${textures}.jpg`);
         
         spaceTexture.anisotropy = 10;
@@ -145,68 +142,64 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             }, 1000);
         }
 
-		const spaceMaterial = new THREE.MeshBasicMaterial({ map: spaceTexture, side: THREE.BackSide });
+        const spaceMaterial = new THREE.MeshBasicMaterial({ map: spaceTexture, side: THREE.BackSide });
 
-		space = new THREE.Mesh(spaceGeometry, spaceMaterial);
-		space.scale.x = -1;
-		space.scale.y = -1;
-		space.scale.z = -1;
-		space.rotation.x = -Math.PI * 0.37;
-		space.rotation.y = -Math.PI * 0.88;
-		space.rotation.z = Math.PI * 0.58;
-		scene.add(space);
-		// Space
-		
-		// Sun
-		const sunShaderGeometry = new THREE.SphereBufferGeometry(4.638, 64 / k, 64 / k);
-        const shaderCode = fragShader;
-        const sunShaderMaterial = new THREE.ShaderMaterial({ fragmentShader: shaderCode });
+        space = new THREE.Mesh(spaceGeometry, spaceMaterial);
+        space.scale.x = -1;
+        space.scale.y = -1;
+        space.scale.z = -1;
+        space.rotation.x = -Math.PI * 0.37;
+        space.rotation.y = -Math.PI * 0.88;
+        space.rotation.z = Math.PI * 0.58;
+        scene.add(space);
+        // Space
+        
+        // Sun
+        const sunShaderGeometry = new THREE.SphereBufferGeometry(4.638, 64 / k, 64 / k);
+        const sunShaderMaterial = new THREE.ShaderMaterial({ fragmentShader: sunFragmentShader });
 
-		sun = new THREE.Mesh(sunShaderGeometry, sunShaderMaterial);
-		scene.add(sun);
-		// Sun
-        
-        // Halo
-        class Halo {
-			constructor(radius, widthSegments = 64 / k, heightSegments = 64 / k) {
-				this.radius = radius, this.widthSegments = widthSegments, this.heightSegments = heightSegments, this.init()
-			}
-			
-			init() {
-				scene.add(new THREE.Mesh(
-                    new THREE.SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments),
-                    new THREE.ShaderMaterial({
-                        uniforms: {},
-                        vertexShader: vertexShader,
-                        fragmentShader: fragmentShader,
-                        side: THREE.BackSide,
-                        blending: THREE.AdditiveBlending,
-                        transparent: true
-                    })
-                ))
-			}
-		}
-        
-        new Halo(50);
-        new Halo(20);
-        new Halo(7);
-        // Halo
+        sun = new THREE.Mesh(sunShaderGeometry, sunShaderMaterial);
+        scene.add(sun);
+
+        class SunSprite {
+            constructor(scaleX, scaleY, opacity, texture) {
+                this.scaleX = scaleX;
+                this.scaleY = scaleY;
+                this.opacity = opacity;
+                this.texture = texture;
+                return this.init();
+            }
+            
+            init() {
+                const spriteMap = new THREE.TextureLoader().load(this.texture);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff, transparent: true, opacity: this.opacity });
+                const sprite = new THREE.Sprite(spriteMaterial);
+
+                sprite.scale.set(this.scaleX, this.scaleY, 1)
+                scene.add(sprite);
+            }
+        }
+
+        new SunSprite(500, 500, 0.2, '../img/sun.png');
+        new SunSprite(200, 200, 1, '../img/corona.png');
+        new SunSprite(1000, 500, 0.1, '../img/flare.png');
+        // Sun
         
         
         // Planets
-		class Planet {
-			constructor(radius, segments, texture, halo = false, haloSize = 0) {
-				this.radius = radius, this.segments = segments, this.texture = texture, this.halo = halo, this.haloSize = haloSize;
+        class Planet {
+            constructor(radius, segments, texture, halo = false, haloSize = 0) {
+                this.radius = radius, this.segments = segments, this.texture = texture, this.halo = halo, this.haloSize = haloSize;
                 return this.init();
-			}
-			
-			init() {
-				const planetTexture = new THREE.TextureLoader().load(this.texture);
+            }
+            
+            init() {
+                const planetTexture = new THREE.TextureLoader().load(this.texture);
 
-				planetTexture.anisotropy = 7;
+                planetTexture.anisotropy = 7;
 
-				const planet = new THREE.Mesh(
-                    new THREE.SphereBufferGeometry(this.radius, this.segments, this.segments),
+                const planet = new THREE.Mesh(
+                    new THREE.SphereGeometry(this.radius, this.segments, this.segments),
                     new THREE.MeshPhongMaterial({ map: planetTexture, color: 0xffffff })
                 );
                 
@@ -226,26 +219,26 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                     planetHalo = halo;
                 }
                 
-				planet.castShadow = true;
-				planet.receiveShadow = true;
+                planet.castShadow = true;
+                planet.receiveShadow = true;
                 scene.add(planet);
-				return planet;
-			}
-		}
-		
-		mercury = new Planet(0.0163, 44 / k, `/img/mercury${textures}-min.jpg`);
-		venus = new Planet(0.0403, 60 / k, `/img/venus${textures}-min.jpg`);
-		earth = new Planet(0.0425, 60 / k, `/img/earth${textures}-min.jpg`, true, 1.01 );//0.00425
-		moon = new Planet(0.0116, 44 / k, `/img/moon${textures}-min.jpg`);
-		mars = new Planet(0.0226, 60 / k, `/img/mars${textures}-min.jpg`);
-		jupiter = new Planet(0.4611, 180 / k, `/img/jupiter${textures}-min.jpg`);
-		saturn = new Planet(0.3821, 180 / k, `/img/saturn${textures}-min.jpg`);
-		uranus = new Planet(0.1684, 180 / k, `/img/uranus${textures}-min.jpg`);
-		neptune = new Planet(0.167, 180 / k, `/img/neptune${textures}-min.jpg`);
-		pluto = new Planet(0.0079, 30 / k, `/img/pluto${textures}-min.jpg`);
-		charon = new Planet(0.004, 30 / k, `/img/charon${textures}-min.jpg`);
+                return planet;
+            }
+        }
+        
+        mercury = new Planet(0.0163, 44 / k, `/img/mercury${textures}-min.jpg`);
+        venus = new Planet(0.0403, 60 / k, `/img/venus${textures}-min.jpg`);
+        earth = new Planet(0.0425, 60 / k, `/img/earth${textures}-min.jpg`, true, 1.01 );//0.00425
+        moon = new Planet(0.0116, 44 / k, `/img/moon${textures}-min.jpg`);
+        mars = new Planet(0.0226, 60 / k, `/img/mars${textures}-min.jpg`);
+        jupiter = new Planet(0.4611, 180 / k, `/img/jupiter${textures}-min.jpg`);
+        saturn = new Planet(0.3821, 180 / k, `/img/saturn${textures}-min.jpg`);
+        uranus = new Planet(0.1684, 180 / k, `/img/uranus${textures}-min.jpg`);
+        neptune = new Planet(0.167, 180 / k, `/img/neptune${textures}-min.jpg`);
+        pluto = new Planet(0.0079, 30 / k, `/img/pluto${textures}-min.jpg`);
+        charon = new Planet(0.004, 30 / k, `/img/charon${textures}-min.jpg`);
         // Planets
-		
+        
         // Rings
         class Ring {
             constructor(radiusTop, radiusBottom, vheight, radialSegments, heightSegments, opacity, texture) {
@@ -265,44 +258,45 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 const material = new THREE.MeshBasicMaterial({ map: ringTexture, color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: this.opacity });
                 const ring = new THREE.Mesh(geometry, material);
 
-                ring.receiveShadow = true;
                 scene.add(ring);
+                ring.castShadow = true;
+                ring.receiveShadow = true;
                 return ring;
             }
         }      
 
-        ringSaturn = new Ring(0.43, 0.9, 0.0001, 200, 10, 0.5, `/img/saturn_ring${textures}.png`);
-        ringUranus = new Ring(0.26, 0.34, 0.0001, 200, 10, 0.2, `/img/uranus_ring${textures}.png`);
+        ringSaturn = new Ring(0.43, 0.9, 0.0001, 100, 10, 0.5, `/img/saturn_ring${textures}.png`);
+        ringUranus = new Ring(0.26, 0.34, 0.0001, 100, 10, 0.2, `/img/uranus_ring${textures}.png`);
         // Rings
-		
-		window.addEventListener('resize', onWindowResize, false);
-	}
-	
+        
+        window.addEventListener('resize', onWindowResize, false);
+    }
+    
 
-	let forwardButtonState = false,
+    let forwardButtonState = false,
         backButtonState = false,
         leftButtonState = false,
         rightButtonState = false,
         flightCam = false,
         cam = false,
         cx, cz, cr, px, pz;
-	
-	class Physics {
-		constructor(planet, yearInEarthDays, planetaryDaysInYear, distanceToSun, inclinationOfPlanet, rotationPlanet, speed, time, start) {
-			this.planet = planet;
-			this.yied = yearInEarthDays;
-			this.pdiy = planetaryDaysInYear;
-			this.dts = distanceToSun;
-			this.iop = inclinationOfPlanet;
-			this.rp = rotationPlanet;
-			this.s = speed;
-			this.t = time;
-			this.start = start + ((new Date().getTime() / 86400000) % 365.25) * Math.PI / this.yied;
+    
+    class Physics {
+        constructor(planet, yearInEarthDays, planetaryDaysInYear, distanceToSun, inclinationOfPlanet, rotationPlanet, speed, time, start) {
+            this.planet = planet;
+            this.yied = yearInEarthDays;
+            this.pdiy = planetaryDaysInYear;
+            this.dts = distanceToSun;
+            this.iop = inclinationOfPlanet;
+            this.rp = rotationPlanet;
+            this.s = speed;
+            this.t = time;
+            this.start = start + ((new Date().getTime() / 86400000) % 365.25) * Math.PI / this.yied;
             return this.init();
-		}
-		init() {
-			this.planet.position.x = Math.sin((this.t * this.s * 365.25 / this.yied) + this.start) * this.dts;
-			this.planet.position.z = Math.cos((this.t * this.s * 365.25 / this.yied) + this.start) * this.dts;
+        }
+        init() {
+            this.planet.position.x = Math.sin((this.t * this.s * 365.25 / this.yied) + this.start) * this.dts;
+            this.planet.position.z = Math.cos((this.t * this.s * 365.25 / this.yied) + this.start) * this.dts;
             
             this.planet.rotation.y = ((new Date().getTime() / 86400000) % 24) * Math.PI * this.yied / 365.25;
             this.rp ? (
@@ -311,28 +305,28 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 this.planet.rotation.y -= 365.25 * this.s / this.yied * (Math.PI * this.pdiy) / 360
             );
             
-			this.planet.rotation.x = this.iop * Math.PI / 180;
-			return this.planet;
-		}
-	}
-	
-	class CameraLook {
-		constructor (planet, distanceToPlanet) {
-			this.planet = planet, this.distanceToPlanet = distanceToPlanet;
+            this.planet.rotation.x = this.iop * Math.PI / 180;
+            return this.planet;
+        }
+    }
+    
+    class CameraLook {
+        constructor (planet, distanceToPlanet) {
+            this.planet = planet, this.distanceToPlanet = distanceToPlanet;
             return this.init();
-		}
+        }
 
-		init () {
-			camera.lookAt(this.planet.position);
-			camera.position.x = this.planet.position.x + Math.cos(time * rotationalSpeed) * this.distanceToPlanet * Math.pow(3, 1 / 2) / 2;
-			camera.position.y = this.planet.position.y + Math.cos(time * rotationalSpeed) * this.distanceToPlanet / 2;
-			camera.position.z = this.planet.position.z + Math.sin(time * rotationalSpeed) * this.distanceToPlanet;
-			cx = camera.position.x;
-			cz = camera.position.z;
-			px = this.planet.position.x;
-			pz = this.planet.position.z;
-		}
-	}
+        init () {
+            camera.lookAt(this.planet.position);
+            camera.position.x = this.planet.position.x + Math.cos(time * rotationalSpeed) * this.distanceToPlanet * Math.pow(3, 1 / 2) / 2;
+            camera.position.y = this.planet.position.y + Math.cos(time * rotationalSpeed) * this.distanceToPlanet / 2;
+            camera.position.z = this.planet.position.z + Math.sin(time * rotationalSpeed) * this.distanceToPlanet;
+            cx = camera.position.x;
+            cz = camera.position.z;
+            px = this.planet.position.x;
+            pz = this.planet.position.z;
+        }
+    }
     
     // Flight controls
     function flightControl() {
@@ -341,16 +335,16 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         flightCam = true;
         
         if (mobileDevice()) {
-			const speedControl = document.getElementById('speedControl');
+            const speedControl = document.getElementById('speedControl');
             const range = document.getElementById('range');
             
-			range.addEventListener('input', function () {
+            range.addEventListener('input', function () {
                 speed = range.value / 8922394.583;
                 speedControl.innerHTML = 'скорость: ' + range.value + ' км/с';
-			});
+            });
             
             speed = range.value / 8922394.583;
-			speedControl.innerHTML = 'скорость: ' + range.value + ' км/с';
+            speedControl.innerHTML = 'скорость: ' + range.value + ' км/с';
             
             controls = new CameraControls(camera);
             controls.direction = px < cx ? Math.atan((pz - cz) / (px - cx)) + Math.PI / 2 : Math.atan((pz - cz) / (px - cx)) - Math.PI / 2;
@@ -358,7 +352,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             controls.z = cz;
             controls.updateCamera();
 
-			let startX,
+            let startX,
                 startY;
 
             const areaTouchMove = document.getElementById('areaTouchMove');
@@ -367,23 +361,23 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             const left = document.getElementById('left');
             const right = document.getElementById('right');
             
-			areaTouchMove.addEventListener('touchstart', touchStart, false);
-			areaTouchMove.addEventListener('touchend', touchEnd, false);
+            areaTouchMove.addEventListener('touchstart', touchStart, false);
+            areaTouchMove.addEventListener('touchend', touchEnd, false);
             
             function touchStart(event) {
                 event.preventDefault();
                 event.stopPropagation();
-			    startX = event.changedTouches[0].clientX;
-			    startY = event.changedTouches[0].clientY;
+                startX = event.changedTouches[0].clientX;
+                startY = event.changedTouches[0].clientY;
                 
                 this.addEventListener('touchmove', touchMove, false);
-			}
+            }
             
             function touchEnd() {
                 event.preventDefault();
                 event.stopPropagation();
                 this.removeEventListener('touchmove', touchMove)
-			}
+            }
             
             function touchMove(event) {
                 event.preventDefault();
@@ -394,7 +388,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 startX = event.changedTouches[0].clientX;
                 startY = event.changedTouches[0].clientY;
 
-				if (controls != null) {
+                if (controls != null) {
                     !!(+getCookie('invert_y')) ? (
                         controls.angle -= touchYRel * 0.007 * sensivity
                     ) : (
@@ -407,7 +401,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                     controls.direction += touchXRel * 0.007 * sensivity;
                     controls.updateCamera();
                 }
-			}
+            }
             
             window.addEventListener('touchstart', function (event) {
                 switch (event.srcElement) {
@@ -426,10 +420,10 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                     case right: rightButtonState = false; break;
                 }
             });
-		} else {
-			const speedControl = document.getElementById('speedControl');
-			document.addEventListener('wheel', function (event) {
-				if (speed >= 0.0000005 && speed < 0.00001) speed -= event.deltaY / 1000000000;
+        } else {
+            const speedControl = document.getElementById('speedControl');
+            document.addEventListener('wheel', function (event) {
+                if (speed >= 0.0000005 && speed < 0.00001) speed -= event.deltaY / 1000000000;
                 if (speed >= 0.00001 && speed < 0.0001) speed -= event.deltaY / 100000000;
                 if (speed >= 0.0001 && speed < 0.001) speed -= event.deltaY / 7500000;
                 if (speed >= 0.001 && speed < 0.01) speed -= event.deltaY / 500000;
@@ -437,8 +431,8 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 if (speed > 0.0331) speed = 0.0331;
                 if (speed < 0.0000005) speed = 0.0000005;
                 speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/с';
-			});
-			speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/с';
+            });
+            speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/с';
             
             controls = new CameraControls(camera);
             controls.direction = px < cx ? Math.atan((pz - cz) / (px - cx)) + Math.PI / 2 : Math.atan((pz - cz) / (px - cx)) - Math.PI / 2;
@@ -446,8 +440,8 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             controls.z = cz;
             controls.updateCamera();
 
-			document.addEventListener('mousedown', function () {
-				if (controls != null) {
+            document.addEventListener('mousedown', function () {
+                if (controls != null) {
                     document.onmousemove = function (event) {
                         !!(+getCookie('invert_y')) ? (
                             controls.angle -= event.movementY * 0.002 * sensivity
@@ -462,63 +456,63 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                         controls.updateCamera();
                     }
                 }
-			});
+            });
 
-			document.addEventListener('mouseup', function () {
-				document.onmousemove = null;
-			});
+            document.addEventListener('mouseup', function () {
+                document.onmousemove = null;
+            });
 
-			window.addEventListener('keydown', function(event) {
-				if (event.repeat === false) {
-					switch (event.keyCode) {
-						case 87: forwardButtonState = true; break;
-						case 83: backButtonState = true; break;
-						case 65: leftButtonState = true; break;
-						case 68: rightButtonState = true; break; 
-					}
-				}
-			});
+            window.addEventListener('keydown', function(event) {
+                if (event.repeat === false) {
+                    switch (event.keyCode) {
+                        case 87: forwardButtonState = true; break;
+                        case 83: backButtonState = true; break;
+                        case 65: leftButtonState = true; break;
+                        case 68: rightButtonState = true; break; 
+                    }
+                }
+            });
 
-			window.addEventListener('keyup', function(event) {
+            window.addEventListener('keyup', function(event) {
                 switch (event.keyCode) {
                     case 87: forwardButtonState = false; break;
                     case 83: backButtonState = false; break;
                     case 65: leftButtonState = false; break;
                     case 68: rightButtonState = false; break; 
                 }
-			});
-		}
+            });
+        }
     }
     // Flight controls
     
-	
-	let objects = [];
     
-	function lookAtPlanet(arrayIndex) {
-		for (let i = 0; i <= 12; i++) {
+    let objects = [];
+    
+    function lookAtPlanet(arrayIndex) {
+        for (let i = 0; i <= 12; i++) {
             objects[i] = !(i !== arrayIndex);
-		}
-	}
+        }
+    }
     
-	lookAtPlanet(3);
+    lookAtPlanet(3);
     
     function doNotFlyLookAtEarth() {
-		flightCam = false;
-		controls = null;
+        flightCam = false;
+        controls = null;
         
-		lookAtPlanet(3);
+        lookAtPlanet(3);
     }
     
     function doNotFlyLookAtRandomPlanet() {
-		flightCam = false;
-		controls = null;
+        flightCam = false;
+        controls = null;
         
-		lookAtPlanet(parseInt(Math.random() * 12));
+        lookAtPlanet(parseInt(Math.random() * 12));
     }
     
     function doNotFlyLookAtSelectedPlanet() {
-		flightCam = false;
-		controls = null;
+        flightCam = false;
+        controls = null;
         
         const objectsNames = document.getElementsByClassName('planet');
         
@@ -528,7 +522,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
     }
     
     doNotFlyLookAtSelectedPlanet();
-	
+    
     (function () {
         let arr = [
             ['planets', doNotFlyLookAtSelectedPlanet],
@@ -553,92 +547,92 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             default: doNotFlyLookAtRandomPlanet();
         }
     });
-	
-	function onWindowResize() {
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
-		renderer.setSize(window.innerWidth, window.innerHeight);
-	}
+    
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
     
     function renderScene() {
-		new Physics(mercury, 88, 2 / 3, 386.0667, 7, true, speedPlanets, time, -2.47);//-2.47
-		new Physics(venus, 224.7, 1.081, 720, 3.4, false, speedPlanets, time, -0.9);//-0.9
-		new Physics(earth, 365.25, 365.25, 1000, 23.5, true, speedPlanets, time, -0.7);//-0.7
-		new Physics(planetHalo, 365.25, 365.25, 1000, 23.5, true, speedPlanets, time, -0.7);//-0.7
-		new Physics(mars, 686.97, 668.6, 1520, 1.85, true, speedPlanets, time, -0.8);//-0.8
-		new Physics(jupiter, 4331.865, 10476, 5190.4667, 1.3, true, speedPlanets, time, -1.4);
-		new Physics(saturn, 10759, 24231.42, 9533.3333, 2.48, true, speedPlanets, time, 2);
-		new Physics(uranus, 30681, 42711.57, 19133.3333, -97.77, true, speedPlanets, time, 0.9);
-		new Physics(neptune, 60189.55, 89667.85, 30000, 23, true, speedPlanets, time, 0);
-		new Physics(pluto, 90552.78, 14177.67, 40000, 5, false, speedPlanets, time, 3.13);
-		
-		charon.position.x = pluto.position.x + Math.cos(-time * 57.18 * speedPlanets) * 0.1308;
-		charon.position.z = pluto.position.z + Math.sin(-time * 57.18 * speedPlanets) * 0.1308;
-		
-		moon.position.x = earth.position.x + Math.cos(-time * 12.175 * speedPlanets) * 2.5627;//2.5627;
-		moon.position.z = earth.position.z + Math.sin(-time * 12.175 * speedPlanets) * 2.5627;//2.5627;
-		
-		ringSaturn.position.x = saturn.position.x;
-		ringSaturn.position.z = saturn.position.z;
-		ringSaturn.rotation.x = saturn.rotation.x;
-		ringSaturn.rotation.y -= (speedPlanets * 0.1 * 365.25 / 10759) * (Math.PI * 24123.42) / 360;
-
-		ringUranus.position.x = uranus.position.x;
-		ringUranus.position.z = uranus.position.z;
-		ringUranus.rotation.x = uranus.rotation.x;
-		ringUranus.rotation.y -= (speedPlanets * 0.3 * 365.25 / 30681) * (Math.PI * 42711.57) / 360;
+        new Physics(mercury, 88, 2 / 3, 386.0667, 7, true, speedPlanets, time, -2.47);//-2.47
+        new Physics(venus, 224.7, 1.081, 720, 3.4, false, speedPlanets, time, -0.9);//-0.9
+        new Physics(earth, 365.25, 365.25, 1000, 23.5, true, speedPlanets, time, -0.7);//-0.7
+        new Physics(planetHalo, 365.25, 365.25, 1000, 23.5, true, speedPlanets, time, -0.7);//-0.7
+        new Physics(mars, 686.97, 668.6, 1520, 1.85, true, speedPlanets, time, -0.8);//-0.8
+        new Physics(jupiter, 4331.865, 10476, 5190.4667, 1.3, true, speedPlanets, time, -1.4);
+        new Physics(saturn, 10759, 24231.42, 9533.3333, 2.48, true, speedPlanets, time, 2);
+        new Physics(uranus, 30681, 42711.57, 19133.3333, -97.77, true, speedPlanets, time, 0.9);
+        new Physics(neptune, 60189.55, 89667.85, 30000, 23, true, speedPlanets, time, 0);
+        new Physics(pluto, 90552.78, 14177.67, 40000, 5, false, speedPlanets, time, 3.13);
         
-		if (objects[0]) new CameraLook(sun, 17);
-		if (objects[1]) new CameraLook(mercury, 0.1);
-		if (objects[2]) new CameraLook(venus, 0.2);
-		if (objects[3]) new CameraLook(earth, 0.2);
-		if (objects[4]) new CameraLook(moon, 0.1);
-		if (objects[5]) new CameraLook(mars, 0.15);
-		if (objects[6]) new CameraLook(jupiter, 1.5);
-		if (objects[7]) new CameraLook(saturn, 1.5);
-		if (objects[8]) new CameraLook(uranus, 1);
-		if (objects[9]) new CameraLook(neptune, 1);
-		if (objects[10]) new CameraLook(pluto, 0.1);
-		if (objects[11]) new CameraLook(charon, 0.05);
-		if (objects[12]) new CameraLook(space, 15000000000);
-		
-		if (flightCam) {
-			if (forwardButtonState) {
-				controls.z += Math.cos(controls.direction) * speed;
-				controls.x -= Math.sin(controls.direction) * speed;
-				controls.y -= Math.sin(controls.angle) * speed;
-				controls.updateCamera();
-			}
+        charon.position.x = pluto.position.x + Math.cos(-time * 57.18 * speedPlanets) * 0.1308;
+        charon.position.z = pluto.position.z + Math.sin(-time * 57.18 * speedPlanets) * 0.1308;
+        
+        moon.position.x = earth.position.x + Math.cos(-time * 12.175 * speedPlanets) * 2.5627;
+        moon.position.z = earth.position.z + Math.sin(-time * 12.175 * speedPlanets) * 2.5627;
+        
+        ringSaturn.position.x = saturn.position.x;
+        ringSaturn.position.z = saturn.position.z;
+        ringSaturn.rotation.x = saturn.rotation.x;
+        ringSaturn.rotation.y -= (speedPlanets * 0.1 * 365.25 / 10759) * (Math.PI * 24123.42) / 360;
+
+        ringUranus.position.x = uranus.position.x;
+        ringUranus.position.z = uranus.position.z;
+        ringUranus.rotation.x = uranus.rotation.x;
+        ringUranus.rotation.y -= (speedPlanets * 0.3 * 365.25 / 30681) * (Math.PI * 42711.57) / 360;
+        
+        if (objects[0]) new CameraLook(sun, 17);
+        if (objects[1]) new CameraLook(mercury, 0.1);
+        if (objects[2]) new CameraLook(venus, 0.2);
+        if (objects[3]) new CameraLook(earth, 0.2);
+        if (objects[4]) new CameraLook(moon, 0.1);
+        if (objects[5]) new CameraLook(mars, 0.15);
+        if (objects[6]) new CameraLook(jupiter, 1.5);
+        if (objects[7]) new CameraLook(saturn, 1.5);
+        if (objects[8]) new CameraLook(uranus, 1);
+        if (objects[9]) new CameraLook(neptune, 1);
+        if (objects[10]) new CameraLook(pluto, 0.1);
+        if (objects[11]) new CameraLook(charon, 0.05);
+        if (objects[12]) new CameraLook(space, 15000000000);
+        
+        if (flightCam) {
+            if (forwardButtonState) {
+                controls.z += Math.cos(controls.direction) * speed;
+                controls.x -= Math.sin(controls.direction) * speed;
+                controls.y -= Math.sin(controls.angle) * speed;
+                controls.updateCamera();
+            }
             
             if (backButtonState) {
-				controls.z += Math.cos(controls.direction + Math.PI) * speed;
-				controls.x -= Math.sin(controls.direction + Math.PI) * speed;
-				controls.y -= Math.sin(controls.angle + Math.PI) * speed;
-				controls.updateCamera();
-			}
+                controls.z += Math.cos(controls.direction + Math.PI) * speed;
+                controls.x -= Math.sin(controls.direction + Math.PI) * speed;
+                controls.y -= Math.sin(controls.angle + Math.PI) * speed;
+                controls.updateCamera();
+            }
 
-			if (leftButtonState) {
-				controls.z += Math.sin(controls.direction) * speed;
-				controls.x += Math.cos(controls.direction) * speed;
-				controls.updateCamera();
-			}
+            if (leftButtonState) {
+                controls.z += Math.sin(controls.direction) * speed;
+                controls.x += Math.cos(controls.direction) * speed;
+                controls.updateCamera();
+            }
             
             if (rightButtonState) {
-				controls.z += Math.sin(controls.direction + Math.PI) * speed;
-				controls.x += Math.cos(controls.direction + Math.PI) * speed;
-				controls.updateCamera();
-			}
+                controls.z += Math.sin(controls.direction + Math.PI) * speed;
+                controls.x += Math.cos(controls.direction + Math.PI) * speed;
+                controls.updateCamera();
+            }
 
-			camera.position.set(controls.x, controls.y, controls.z);
-		}
+            camera.position.set(controls.x, controls.y, controls.z);
+        }
         
         time = new Date().getTime() / 1000;
 
         requestAnimationFrame(renderScene);
         renderer.render(scene, camera);
     }
-	
-	initScene();
+    
+    initScene();
     renderScene();
 };
 
