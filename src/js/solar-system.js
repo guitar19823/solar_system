@@ -100,6 +100,10 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
         // Scene
+
+        // Texture Loader
+        const textureLoader = new THREE.TextureLoader();
+        // Texture Loader
         
         // Lights
         const light = new THREE.PointLight(0xffffff, 1.2, 50000);
@@ -125,7 +129,6 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         
         // Space
         const spaceGeometry = new THREE.SphereGeometry(5000000000, 30 / k, 30 / k);
-        const textureLoader = new THREE.TextureLoader();
         const spaceTexture = textureLoader.load(`/img/space${textures}.jpg`);
         
         spaceTexture.anisotropy = 10;
@@ -171,7 +174,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             }
             
             init() {
-                const spriteMap = new THREE.TextureLoader().load(this.texture);
+                const spriteMap = textureLoader.load(this.texture);
                 const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff, transparent: true, opacity: this.opacity });
                 const sprite = new THREE.Sprite(spriteMaterial);
 
@@ -194,7 +197,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             }
             
             init() {
-                const planetTexture = new THREE.TextureLoader().load(this.texture);
+                const planetTexture = textureLoader.load(this.texture);
 
                 planetTexture.anisotropy = 7;
 
@@ -253,7 +256,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             }
 
             init() {
-                const ringTexture = new THREE.TextureLoader().load(this.texture);
+                const ringTexture = textureLoader.load(this.texture);
                 const geometry = new THREE.CylinderGeometry(this.radiusTop, this.radiusBottom, this.vheight, this.radialSegments, this.heightSegments, true);
                 const material = new THREE.MeshBasicMaterial({ map: ringTexture, color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: this.opacity });
                 const ring = new THREE.Mesh(geometry, material);
