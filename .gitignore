@@ -6,6 +6,9 @@
 # Node
 node_modules
 
+# Dev
+src
+
 # Dist & test
 test
 dist
