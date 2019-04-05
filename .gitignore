@@ -10,6 +10,9 @@ node_modules
 test
 dist
 
+# Public
+public
+
 # BD, logs
 *.log
 *.sql
