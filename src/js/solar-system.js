@@ -12,7 +12,7 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
         ringSaturn, ringUranus,
         stars1, stars2, stars3, stars4, stars5,
         time = new Date().getTime() / 1000,
-        speed = 0.0002;
+        speed = 0.0017;
 
     const rotationalSpeed = 0.02;
     const speedPlanets = 1 / 10000000;

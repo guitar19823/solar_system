@@ -1,8 +1,8 @@
+import solarSystem from './solar-system.js';
+
 /* ************************************************ */
 /* **************** USER INTERFACE **************** */
 /* ************************************************ */
-
-import solarSystem from './solar-system.js';
 
 window.onload = () => {
     const socket = io();
@@ -92,49 +92,49 @@ window.onload = () => {
             ['universe', 'космос']
         ];
 
-	let invert_y = getCookie('invert_y'),
-		mouse_sensitivity = getCookie('mouse_sensitivity'),
-	    antialias = getCookie('antialias'),
-		textures = getCookie('textures'),
-		graphics = getCookie('graphics'),
+    let invert_y = getCookie('invert_y'),
+        mouse_sensitivity = getCookie('mouse_sensitivity'),
+        antialias = getCookie('antialias'),
+        textures = getCookie('textures'),
+        graphics = getCookie('graphics'),
         textColor = [],
         navColor = [];
     
     blackPanel.id = 'black_panel';
 
     if (antialias === undefined) {
-    	antialias = '0';
-    	setCookie('antialias', '0');
+        antialias = '0';
+        setCookie('antialias', '0');
     }
 
     if (invert_y === undefined) {
-    	if (mobileDevice()) {
-    		invert_y = '0';
-    		setCookie('invert_y', '0');
-	   	} else {
-	    	invert_y = '1';
-	    	setCookie('invert_y', '1');
-	    }
+        if (mobileDevice()) {
+            invert_y = '0';
+            setCookie('invert_y', '0');
+        } else {
+            invert_y = '1';
+            setCookie('invert_y', '1');
+        }
     }
 
     if (mouse_sensitivity === undefined) {
-    	mouse_sensitivity = '9';
-    	setCookie('mouse_sensitivity', '9');
+        mouse_sensitivity = '9';
+        setCookie('mouse_sensitivity', '9');
     }
 
     if (textures === undefined) {
-    	if (mobileDevice()) {
-    		textures = '1';
-    		setCookie('textures', '1');
-		} else {
-    		textures = '2';
-    		setCookie('textures', '2');
-		}
+        if (mobileDevice()) {
+            textures = '1';
+            setCookie('textures', '1');
+        } else {
+            textures = '2';
+            setCookie('textures', '2');
+        }
     }
 
     if (graphics === undefined) {
-    	graphics = '1';
-    	setCookie('graphics', '1');
+        graphics = '1';
+        setCookie('graphics', '1');
     }
     
     button_menu.addEventListener('click', function () {
@@ -200,53 +200,53 @@ window.onload = () => {
     call(contacts, 'contacts', 'Контактные данные', renderContacts);
     call(settings, 'settings', 'Настройки', renderSettings);
 
-	/**
-	* setCookie
-	* @name
-	* @value
-	* @options
-	*/
-	function setCookie(name, value, options = { expires: 604800, path: '/' }) {
-		let expires = options.expires;
+    /**
+    * setCookie
+    * @name
+    * @value
+    * @options
+    */
+    function setCookie(name, value, options = { expires: 604800, path: '/' }) {
+        let expires = options.expires;
 
-		if (typeof expires == "number" && expires) {
-			const date = new Date();
+        if (typeof expires == "number" && expires) {
+            const date = new Date();
 
-			date.setTime(date.getTime() + expires * 1000);
-			expires = options.expires = date;
-		}
+            date.setTime(date.getTime() + expires * 1000);
+            expires = options.expires = date;
+        }
 
-		if (expires && expires.toUTCString) {
-			options.expires = expires.toUTCString();
-		}
+        if (expires && expires.toUTCString) {
+            options.expires = expires.toUTCString();
+        }
 
-		value = encodeURIComponent(value);
+        value = encodeURIComponent(value);
 
-		let updatedCookie = name + "=" + value;
+        let updatedCookie = name + "=" + value;
 
-		for (let propName in options) {
-			updatedCookie += "; " + propName;
-			const propValue = options[propName];
+        for (let propName in options) {
+            updatedCookie += "; " + propName;
+            const propValue = options[propName];
 
-			if (propValue !== true) {
-				updatedCookie += "=" + propValue;
-			}
-		}
+            if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+            }
+        }
 
-		document.cookie = updatedCookie;
-	}
+        document.cookie = updatedCookie;
+    }
 
-	/**
-	* getCookie
-	* @name
-	*/
-	function getCookie(name) {
-		const matches = document.cookie.match(new RegExp(
-			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-		));
+    /**
+    * getCookie
+    * @name
+    */
+    function getCookie(name) {
+        const matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
 
-		return matches ? decodeURIComponent(matches[1]) : undefined;
-	}
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
     
     /**
     * xhr
@@ -276,86 +276,77 @@ window.onload = () => {
     /**
     * ajax
     */
-    function ajax(data) {
+    function ajax({ method, url, param, json, func }) {
         let request = xhr();
         request.addEventListener('readystatechange', () => {
-            4 == request.readyState
-            && 200 == request.status
-            && (document.getElementById(data.elementId).innerHTML = request.responseText);
-        } );
+            4 == request.readyState && 200 == request.status && func(request);
+        });
 
-        request.open(data.method, '/' + data.url, true);
+        request.open(method, '/' + url, true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        request.send(data.param + '=' + JSON.stringify(data.json));
+        request.send(param + '=' + JSON.stringify(json));
     }
 
     /**
     * reloader
     * @time
     */ 
-	function reloader(time = 3) {
-		const reloadMsg = document.createElement('div');
-		const p1 = document.createElement('p');
-		const p2 = document.createElement('p');
-		const span = document.createElement('span');
+    function reloader(time = 3) {
+        const reloadMsg = document.createElement('div');
+        const p1 = document.createElement('p');
+        const p2 = document.createElement('p');
+        const span = document.createElement('span');
 
-		reloadMsg.id = 'message_box';
-		span.id = 'time';
+        reloadMsg.id = 'message_box';
+        span.id = 'time';
 
-		span.appendChild(document.createTextNode(time));
-		p1.appendChild(document.createTextNode('Настройки сохранены'));
-		p2.appendChild(document.createTextNode('Программа перезагрузится через '));
-		p2.appendChild(span);
-		p2.appendChild(document.createTextNode(' сек.'));
-		reloadMsg.appendChild(p1);
-		reloadMsg.appendChild(p2);
-		main.appendChild(reloadMsg);
+        span.appendChild(document.createTextNode(time));
+        p1.appendChild(document.createTextNode('Настройки сохранены'));
+        p2.appendChild(document.createTextNode('Программа перезагрузится через '));
+        p2.appendChild(span);
+        p2.appendChild(document.createTextNode(' сек.'));
+        reloadMsg.appendChild(p1);
+        reloadMsg.appendChild(p2);
+        main.appendChild(reloadMsg);
 
         let sI = setInterval(() => {
-        	time--;
-        	span.innerHTML = time;
-        	if (time <= 0) {
-        		clearInterval(sI);
-        		location.reload();
-        	}
+            time--;
+            span.innerHTML = time;
+            if (time <= 0) {
+                clearInterval(sI);
+                location.reload();
+            }
         }, 1000);
-	}
+    }
 
-	/**
+    /**
     * messageBox
     * @message
     * @delay
     */ 
-	function messageBox(message, delay = 1500) {
-		const reloadMsg = document.createElement('div');
-		const p = document.createElement('p');
+    function messageBox(message, delay = 1500) {
+        const reloadMsg = document.createElement('div');
+        const p = document.createElement('p');
 
-		reloadMsg.id = 'message_box';
+        reloadMsg.id = 'message_box';
 
-		p.appendChild(document.createTextNode(message));
-		reloadMsg.appendChild(p);
-		main.appendChild(reloadMsg);
+        p.appendChild(document.createTextNode(message));
+        reloadMsg.appendChild(p);
+        main.appendChild(reloadMsg);
 
-		setTimeout(() => {
-			reloadMsg.remove();
-		}, delay);
-	}
-    
-    /**
-    * deleteChilds
-    */ 
-	function deleteChilds(parent) {
-        parent.lastChild != void(0) && (parent.innerHTML = '', deleteChilds(parent));
-	}
+        setTimeout(() => {
+            reloadMsg.remove();
+        }, delay);
+    }
     
     /**
     * color
     */
-	function color(object, array) {
+    function color(object, array) {
         array.map(function (elem) {
             elem.style.color = elem === object ? '#eee' : '#aaa';
         });
-	}
+    }
     
     /**
     * setTitle
@@ -368,7 +359,7 @@ window.onload = () => {
     * renderPlanets
     */
     function renderPlanets() {
-		color(planets, navColor);
+        color(planets, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
         
         let objs;
@@ -376,7 +367,7 @@ window.onload = () => {
         for (let i = 0, l = arrObj.length; i < l; i++) {
             i == 0 && (objs = `<div id="list">`);
             objs += `<p id="${arrObj[i][0]}" class="planet">${arrObj[i][1]}</p>`;
-            i == l - 1 && (objs += `</div><div id="description"><p></p></div>`);
+            i == l - 1 && (objs += `</div><div id="description"></div>`);
         }
         
         main.innerHTML = objs;
@@ -390,27 +381,30 @@ window.onload = () => {
             
             planetList[i].addEventListener('click', function () {
                 color(this, textColor);
-                deleteChilds(description);
-                
-                if (description.lastChild === null) {
-                    ajax({
-                        method: 'POST',
-                        url: 'get_descriptions',
-                        param: 'object',
-                        json: { "object": this.getAttribute('id') },
-                        elementId: 'description' 
-                    });
-                }
+                ajax({
+                    method: 'POST',
+                    url: 'get_descriptions',
+                    param: 'object',
+                    json: { "object": this.getAttribute('id') },
+                    func: ({ responseText }) => {
+                        description.innerHTML = `<div class="description_close"></div>${responseText}`;
+
+                        document.getElementsByClassName('description_close')[0].addEventListener('click', () => {
+                            description.innerHTML = '';
+                        });
+                    }
+                });
+
                 description.style.display = 'block';
             });
         }
-	}
+    }
     
     /**
     * renderFlight
     */
     function renderFlight() {
-		color(flight, navColor);
+        color(flight, navColor);
         
         let descktopControls = '',
             moover = '';
@@ -424,34 +418,34 @@ window.onload = () => {
                     <p id="right"></p>
                 </div>
                 <div id="areaTouchMove"></div>
-                <input type="range" min="0" max="299792" value="1700" id="range">
+                <input type="range" min="0" max="299792" value="15000" id="range">
             </div>
             <div id="speedControl"></div>
             <div id="arrow"></div>
         ` : `
             <div id="control">
                 <div>
-					<p>w</p>
-	                <p>a</p>
-	                <p>s</p>
-	                <p>d</p>
-            	</div>
+                    <p>w</p>
+                    <p>a</p>
+                    <p>s</p>
+                    <p>d</p>
+                </div>
                 <div>
-                	<div></div>
-	                <div class="mouse">
-	                	<div><div></div></div>
-	                	<div></div>
-	                	<div></div>
-	                </div>
-	                <div></div>
+                    <div></div>
+                    <div class="mouse">
+                        <div><div></div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div></div>
                 </div>
             </div>
             <div id="speedControl"></div>
             <div id="scroll">
-            	<div class="mouse">
-                	<div></div>
-                	<div></div>
-                	<div><div></div></div>
+                <div class="mouse">
+                    <div></div>
+                    <div></div>
+                    <div><div></div></div>
                 </div>
             </div>
         `;
@@ -462,7 +456,7 @@ window.onload = () => {
         `;
         
         audio.style.display = 'none';
-	}
+    }
     
     /**
     * getSelect
@@ -475,14 +469,14 @@ window.onload = () => {
             i < length && (options += `<option value="${object[0]}">${object[1]}</option>`);
         });
         
-		return `<select>${options}</select>`;
-	}
+        return `<select>${options}</select>`;
+    }
     
     /**
     * renderSounds
     */
     function renderSounds() {
-		color(sounds, navColor);
+        color(sounds, navColor);
         0 != textColor.length && textColor.splice(0, textColor.length);
         
         let sTrs;
@@ -506,13 +500,13 @@ window.onload = () => {
                 track.play();
             });
         }
-	}
+    }
     
     /**
     * renderChat
     */
     function renderChat() {
-		color(chat, navColor);
+        color(chat, navColor);
         
         main.innerHTML = `
             <div id="chat_window">
@@ -551,137 +545,137 @@ window.onload = () => {
                 msgs.reverse();
             }
         });
-	}
+    }
     
     /**
     * renderContacts
     */
     function renderContacts() {
-		color(contacts, navColor);
+        color(contacts, navColor);
         
-		main.innerHTML = `
+        main.innerHTML = `
             <div id="feedback"></div>
         `;
         
         audio.style.display = 'none';
         
-		const contactDetails = document.createElement('p');
+        const contactDetails = document.createElement('p');
         const feedback = document.getElementById('feedback');
         
-		contactDetails.setAttribute('id', 'contactDetails');
-		feedback.appendChild(contactDetails);
+        contactDetails.setAttribute('id', 'contactDetails');
+        feedback.appendChild(contactDetails);
         
         ajax({
             method: 'POST',
             url: 'get_contacts',
             param: 'contacts',
             json: {"contacts": true},
-            elementId: 'contactDetails' 
+            func: ({ responseText }) => contactDetails.innerHTML = responseText
         });
-	}
+    }
     
     /**
     * renderSettings
     */
     function renderSettings() {
-		color(settings, navColor);
+        color(settings, navColor);
         
-		main.innerHTML = `
+        main.innerHTML = `
             <div id="settings_panel">
-            	<div id="settings_panel-header">
-            		<p>настройки</p>
-            	</div>
-            	<div id="settings_panel-body">
-            		<ul class="bl">
-	            		<p>Управление</p>
-						<li>
-							<input type="checkbox" id="invert_y" />
-							Инверсия оси Y
-						</li>
-						<li>
-							Чувствительность мыши
-							<br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>
-						</li>
-					</ul>
-	            	<ul class="bl">
-	            		<p>Графика</p>
-						<li>
-							<input type="checkbox" id="antialias" />
-							Антиалиасинг
-						</li>
-						<li>
-							Качество текстур
-							<br /><input type="range" id="textures" min="0" max="2" step="1"/>
-						</li>
-						<li>
-							Качество графики
-							<br /><input type="range" id="graphics" min="0" max="2" step="1"/>
-						</li>
-					</ul>
-            	</div>
-				<div  id="settings_panel-footer">
-					<input type="button" class="accept-changes" value="Сохранить" />
-            	</div>
+                <div id="settings_panel-header">
+                    <p>настройки</p>
+                </div>
+                <div id="settings_panel-body">
+                    <ul class="bl">
+                        <p>Управление</p>
+                        <li>
+                            <input type="checkbox" id="invert_y" />
+                            Инверсия оси Y
+                        </li>
+                        <li>
+                            Чувствительность мыши
+                            <br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>
+                        </li>
+                    </ul>
+                    <ul class="bl">
+                        <p>Графика</p>
+                        <li>
+                            <input type="checkbox" id="antialias" />
+                            Антиалиасинг
+                        </li>
+                        <li>
+                            Качество текстур
+                            <br /><input type="range" id="textures" min="0" max="2" step="1"/>
+                        </li>
+                        <li>
+                            Качество графики
+                            <br /><input type="range" id="graphics" min="0" max="2" step="1"/>
+                        </li>
+                    </ul>
+                </div>
+                <div  id="settings_panel-footer">
+                    <input type="button" class="accept-changes" value="Сохранить" />
+                </div>
             </div>
         `;
         
         audio.style.display = 'none';
 
-    	const elementInvertY = document.getElementById('invert_y');
-    	const elementMouseSensitivity = document.getElementById('mouse_sensitivity');
-    	const elementAntialias = document.getElementById('antialias');
-    	const elementTextures = document.getElementById('textures');
-    	const elementGraphics = document.getElementById('graphics');
+        const elementInvertY = document.getElementById('invert_y');
+        const elementMouseSensitivity = document.getElementById('mouse_sensitivity');
+        const elementAntialias = document.getElementById('antialias');
+        const elementTextures = document.getElementById('textures');
+        const elementGraphics = document.getElementById('graphics');
 
-    	elementInvertY.checked = !!(+getCookie('invert_y'));
-    	elementMouseSensitivity.value = getCookie('mouse_sensitivity');
-    	elementAntialias.checked = !!(+getCookie('antialias'));
-    	elementTextures.value = getCookie('textures');
-    	elementGraphics.value = getCookie('graphics');
+        elementInvertY.checked = !!(+getCookie('invert_y'));
+        elementMouseSensitivity.value = getCookie('mouse_sensitivity');
+        elementAntialias.checked = !!(+getCookie('antialias'));
+        elementTextures.value = getCookie('textures');
+        elementGraphics.value = getCookie('graphics');
 
         document.getElementsByClassName('accept-changes')[0].addEventListener('click', () => {
-        	// Graphics
-        	if (
-        		elementAntialias.checked !== !!(+getCookie('antialias'))
-        		|| elementTextures.value !== getCookie('textures')
-        		|| elementGraphics.value !== getCookie('graphics')
-    		) {
-        		setCookie('invert_y', +elementInvertY.checked);
-        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
-        		setCookie('antialias', +elementAntialias.checked);
-        		setCookie('textures', elementTextures.value);
-        		setCookie('graphics', elementGraphics.value);
+            // Graphics
+            if (
+                elementAntialias.checked !== !!(+getCookie('antialias'))
+                || elementTextures.value !== getCookie('textures')
+                || elementGraphics.value !== getCookie('graphics')
+            ) {
+                setCookie('invert_y', +elementInvertY.checked);
+                setCookie('mouse_sensitivity', elementMouseSensitivity.value);
+                setCookie('antialias', +elementAntialias.checked);
+                setCookie('textures', elementTextures.value);
+                setCookie('graphics', elementGraphics.value);
 
-	        	reloader();
-        	}
+                reloader();
+            }
 
-    		// Controls
-    		else if (elementInvertY.checked !== !!(+getCookie('invert_y')) || elementMouseSensitivity.value !== getCookie('mouse_sensitivity')) {
-        		setCookie('invert_y', +elementInvertY.checked);
-        		setCookie('mouse_sensitivity', elementMouseSensitivity.value);
+            // Controls
+            else if (elementInvertY.checked !== !!(+getCookie('invert_y')) || elementMouseSensitivity.value !== getCookie('mouse_sensitivity')) {
+                setCookie('invert_y', +elementInvertY.checked);
+                setCookie('mouse_sensitivity', elementMouseSensitivity.value);
 
-        		messageBox('Настройки сохранены');
-        	}
+                messageBox('Настройки сохранены');
+            }
 
-        	else if (document.getElementById('message_box') === null) {
-        		messageBox('Нет изменений в настройках');
-        	}
+            else if (document.getElementById('message_box') === null) {
+                messageBox('Нет изменений в настройках');
+            }
         });
-	}
+    }
 
-	switch (getCookie('graphics')) {
-		case '0': graphics = 2; break;
-		case '1': graphics = 1; break;
-		case '2': graphics = 1 / 2; break;
-	}
+    switch (getCookie('graphics')) {
+        case '0': graphics = 2; break;
+        case '1': graphics = 1; break;
+        case '2': graphics = 1 / 2; break;
+    }
 
-	switch (getCookie('textures')) {
-		case '0': textures = 'low'; break;
-		case '1': textures = 'medium'; break;
-		case '2': textures = 'high'; break;
-	}
+    switch (getCookie('textures')) {
+        case '0': textures = 'low'; break;
+        case '1': textures = 'medium'; break;
+        case '2': textures = 'high'; break;
+    }
 
-	solarSystem(!!(+antialias), textures, graphics);
+    solarSystem(!!(+antialias), textures, graphics);
 
-	//document.getElementsByClassName('preloader')[0].remove();
+    //document.getElementsByClassName('preloader')[0].remove();
 };

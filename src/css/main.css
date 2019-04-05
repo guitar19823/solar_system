@@ -69,6 +69,8 @@ body {
     height: 100%;
     -webkit-transition: all 1s;
     -o-transition: all 1s;
+    -webkit-transition: all 1.5s;
+    -o-transition: all 1.5s;
     transition: all 1.5s;
     opacity: 1;
     visibility: visible;
@@ -371,7 +373,6 @@ canvas {
     width: 16px;
     height: 16px;
 }
-
 
 
 #main {
@@ -680,11 +681,54 @@ select {
     right: 2vw;
 }
 
-#description > div, 
-#description > p {
+.description_close {
+    right: 0;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    -webkit-animation: close-to-left .5s;
+            animation: close-to-left .5s;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+.description_close::before,
+.description_close::after {
     position: inherit;
+    content: "";
+    display: block;
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+    background: #ccc;
+}
+
+.description_close::before {
+    -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+}
+
+.description_close::after {
+    -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+}
+
+#description > div:last-child, 
+#description > p:last-child {
+    position: inherit;
+    top: 20px;
     padding: 0.5vw;
-    max-height: 98%;
+    max-height: calc(98% - 15px);
     border: 1px solid #555;
     line-height: 1em;
     font-size: 0.8em;
@@ -947,15 +991,6 @@ select {
     transition: opacity 2s;
 }
 
-/*
-@font-face {
-    font-family: "Orbitron";
-    src: url("../fonts/orbitron.ttf") format("truetype");
-    font-style: normal;
-    font-weight: normal;
-}
-*/
-
 @media screen and (max-width: 768px) {
     #list, #control, #tracks {
         left: 4vw;
@@ -1065,6 +1100,16 @@ select {
 @keyframes element-scale {
     0% {-webkit-transform: translateX(-50%) scale(0);transform: translateX(-50%) scale(0)}
     100% {-webkit-transform: translateX(-50%) scale(1);transform: translateX(-50%) scale(1)}
+}
+    
+@-webkit-keyframes close-to-left {
+    0% {-webkit-transform: translateX(100px);transform: translateX(100px)}
+    100% {-webkit-transform: translateX(0);transform: translateX(0)}
+}
+    
+@keyframes close-to-left {
+    0% {-webkit-transform: translateX(100px);transform: translateX(100px)}
+    100% {-webkit-transform: translateX(0);transform: translateX(0)}
 }
     
 @-webkit-keyframes to-left {
