@@ -521,11 +521,7 @@ window.onload = () => {
         const text = document.getElementById('text');
         const button = document.getElementById('button');
         
-        msgs.reverse();
-        messages.innerHTML = msgs.join('');
-        msgs.reverse();
-        
-        button.addEventListener('click', () => {
+        const sendMessage = () => {
             if (text.value) {
                 socket.emit('message', {
                     msg: text.value
@@ -533,6 +529,16 @@ window.onload = () => {
                 
                 text.value = '';
             }
+        };
+        
+        msgs.reverse();
+        messages.innerHTML = msgs.join('');
+        msgs.reverse();
+        
+        button.addEventListener('click', sendMessage);
+
+        window.addEventListener('keydown', (e) => {
+            e.keyCode === 13 && sendMessage();
         });
         
         socket.removeEventListener('message');
