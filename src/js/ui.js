@@ -32,6 +32,120 @@ window.onload = () => {
             navigator.userAgent.match(/BlackBerry/i) ||
             navigator.userAgent.match(/Windows Phone/i)
     }
+
+    const rus = {
+        menu: 'Меню',
+        navigation: {
+            objects: 'объекты',
+            fly: 'полет',
+            music: 'музыка',
+            chat: 'чат',
+            contacts: 'контакты',
+            settings: 'настройки'
+        },
+        objectNames: [
+            'солнце',
+            'меркурий',
+            'венера',
+            'земля',
+            'луна',
+            'марс',
+            'юпитер',
+            'сатурн',
+            'уран',
+            'нептун',
+            'плутон',
+            'харон',
+            'космос'
+        ],
+        titles: {
+            objects: 'Объекты солнечной системы',
+            fly: 'Полет по солнечной системе',
+            music: 'Выбор фоновой музыки',
+            chat: 'Общение по чату',
+            contacts: 'Контактные данные',
+            settings: 'Настройки'
+        },
+        systemTexts: [
+            'Настройки сохранены',
+            'Программа перезагрузится через ',
+            ' сек.',
+            'Нет изменений в настройках'
+        ],
+        buttons: {
+            send: 'Отправить',
+            save: 'Сохранить'
+        },
+        settings: {
+            title: 'настройки',
+            controlSettings: 'Управление',
+            axisInversion: 'Инверсия оси Y',
+            mouseSensitivity: 'Чувствительность мыши',
+            graphicSettings: 'Графика',
+            antialias: 'Сглаживание',
+            textures: 'Качество текстур',
+            graphics: 'Качество графики',
+            language: 'Язык'
+        }
+    };
+
+    const en = {
+        menu: 'Menu',
+        navigation: {
+            objects: 'objects',
+            fly: 'fly',
+            music: 'music',
+            chat: 'chat',
+            contacts: 'contacts',
+            settings: 'settings'
+        },
+        objectNames: [
+            'sun',
+            'mercury',
+            'venus',
+            'earth',
+            'moon',
+            'mars',
+            'jupiter',
+            'saturn',
+            'uranus',
+            'neptune',
+            'pluto',
+            'charon',
+            'universe'
+        ],
+        titles: {
+            objects: 'Objects of the solar system',
+            fly: 'Flight through the solar system',
+            music: 'Select background music',
+            chat: 'Chat',
+            contacts: 'Contact details',
+            settings: 'Settings'
+        },
+        systemTexts: [
+            'Settings have been saved',
+            'The program will reboot through ',
+            ' sec.',
+            'No change in settings'
+        ],
+        buttons: {
+            send: 'Send',
+            save: 'Save'
+        },
+        settings: {
+            title: 'settings',
+            controlSettings: 'Controls',
+            axisInversion: 'Y axis inversion',
+            mouseSensitivity: 'Mouse sensitivity',
+            graphicSettings: 'Graphics',
+            antialias: 'Anti alias',
+            textures: 'Texture quality',
+            graphics: 'Graphics quality',
+            language: 'Language'
+        }
+    };
+
+    const lang = en;
     
     container.innerHTML = `
         <header class="header">
@@ -41,14 +155,14 @@ window.onload = () => {
             </div>
         </header>
         <nav class="nav">
-            <p>Меню</p>
+            <p>${lang.menu}</p>
             <ul>
-                <li class="menu_btns" id="planets"><img src="img/objects.png" alt="img"/>объекты</li>
-                <li class="menu_btns" id="flight"><img src="img/fly.png" alt="img"/>полет</li>
-                <li class="menu_btns" id="sounds"><img src="img/music.png" alt="img"/>музыка</li>
-                <li class="menu_btns" id="chat"><img src="img/chat.png" alt="img"/>чат</li>
-                <li class="menu_btns" id="contacts"><img src="img/contacts.png" alt="img"/>контакты</li>
-                <li class="menu_btns" id="settings"><img src="img/settings.png" alt="img"/>настройки</li>
+                <li class="menu_btns" id="planets"><img src="img/objects.png" alt="img"/>${lang.navigation.objects}</li>
+                <li class="menu_btns" id="flight"><img src="img/fly.png" alt="img"/>${lang.navigation.fly}</li>
+                <li class="menu_btns" id="sounds"><img src="img/music.png" alt="img"/>${lang.navigation.music}</li>
+                <li class="menu_btns" id="chat"><img src="img/chat.png" alt="img"/>${lang.navigation.chat}</li>
+                <li class="menu_btns" id="contacts"><img src="img/contacts.png" alt="img"/>${lang.navigation.contacts}</li>
+                <li class="menu_btns" id="settings"><img src="img/settings.png" alt="img"/>${lang.navigation.settings}</li>
             </ul>
         </nav>
         <main id="main"></main>
@@ -77,19 +191,19 @@ window.onload = () => {
     const button_menu = document.getElementsByClassName('button_menu')[0];
     const nav = document.getElementsByClassName('nav')[0];
     const arrObj = [
-            ['sun', 'солнце'],
-            ['mercury', 'меркурий'],
-            ['venus', 'венера'],
-            ['earth', 'земля'],
-            ['moon', 'луна'],
-            ['mars', 'марс'],
-            ['jupiter', 'юпитер'],
-            ['saturn', 'сатурн'],
-            ['uranus', 'уран'],
-            ['neptune', 'нептун'],
-            ['pluto', 'плутон'],
-            ['charon', 'харон'],
-            ['universe', 'космос']
+            ['sun', lang.objectNames[0]],
+            ['mercury', lang.objectNames[1]],
+            ['venus', lang.objectNames[2]],
+            ['earth', lang.objectNames[3]],
+            ['moon', lang.objectNames[4]],
+            ['mars', lang.objectNames[5]],
+            ['jupiter', lang.objectNames[6]],
+            ['saturn', lang.objectNames[7]],
+            ['uranus', lang.objectNames[8]],
+            ['neptune', lang.objectNames[9]],
+            ['pluto', lang.objectNames[10]],
+            ['charon', lang.objectNames[11]],
+            ['universe', lang.objectNames[12]]
         ];
 
     let invert_y = getCookie('invert_y'),
@@ -189,16 +303,16 @@ window.onload = () => {
             foo();
         })
     }
-    
-    setTitle('Объекты солнечной системы');
+
+    setTitle(lang.titles.objects);
     renderPlanets();
     
-    call(planets, 'objects', 'Объекты солнечной системы', renderPlanets);
-    call(flight, 'flight', 'Полет по солнечной системе', renderFlight);
-    call(sounds, 'sounds', 'Выбор фоновой музыки', renderSounds);
-    call(chat, 'chat', 'Общение по чату', renderChat);
-    call(contacts, 'contacts', 'Контактные данные', renderContacts);
-    call(settings, 'settings', 'Настройки', renderSettings);
+    call(planets, 'objects', lang.titles.objects, renderPlanets);
+    call(flight, 'flight', lang.titles.fly, renderFlight);
+    call(sounds, 'sounds', lang.titles.music, renderSounds);
+    call(chat, 'chat', lang.titles.chat, renderChat);
+    call(contacts, 'contacts', lang.titles.contacts, renderContacts);
+    call(settings, 'settings', lang.titles.settings, renderSettings);
 
     /**
     * setCookie
@@ -301,10 +415,10 @@ window.onload = () => {
         span.id = 'time';
 
         span.appendChild(document.createTextNode(time));
-        p1.appendChild(document.createTextNode('Настройки сохранены'));
-        p2.appendChild(document.createTextNode('Программа перезагрузится через '));
+        p1.appendChild(document.createTextNode(lang.systemTexts[0]));
+        p2.appendChild(document.createTextNode(lang.systemTexts[1]));
         p2.appendChild(span);
-        p2.appendChild(document.createTextNode(' сек.'));
+        p2.appendChild(document.createTextNode(lang.systemTexts[2]));
         reloadMsg.appendChild(p1);
         reloadMsg.appendChild(p2);
         main.appendChild(reloadMsg);
@@ -512,7 +626,7 @@ window.onload = () => {
             <div id="chat_window">
                 <p id="messages"></p>
                 <input type="text" id="text" autocomplete="off">
-                <button id="button">отправить</button>
+                <button id="button">${lang.buttons.send}</button>
             </div>
         `;
         
@@ -589,38 +703,38 @@ window.onload = () => {
         main.innerHTML = `
             <div id="settings_panel">
                 <div id="settings_panel-header">
-                    <p>настройки</p>
+                    <p>${lang.settings.title}</p>
                 </div>
                 <div id="settings_panel-body">
                     <ul class="bl">
-                        <p>Управление</p>
+                        <p>${lang.settings.controlSettings}</p>
                         <li>
                             <input type="checkbox" id="invert_y" />
-                            Инверсия оси Y
+                            ${lang.settings.axisInversion}
                         </li>
                         <li>
-                            Чувствительность мыши
+                            ${lang.settings.mouseSensitivity}
                             <br /><input type="range" id="mouse_sensitivity" min="1" max="17" step="2"/>
                         </li>
                     </ul>
                     <ul class="bl">
-                        <p>Графика</p>
+                        <p>${lang.settings.graphicSettings}</p>
                         <li>
                             <input type="checkbox" id="antialias" />
-                            Антиалиасинг
+                            ${lang.settings.antialias}
                         </li>
                         <li>
-                            Качество текстур
+                            ${lang.settings.textures}
                             <br /><input type="range" id="textures" min="0" max="2" step="1"/>
                         </li>
                         <li>
-                            Качество графики
+                            ${lang.settings.graphics}
                             <br /><input type="range" id="graphics" min="0" max="2" step="1"/>
                         </li>
                     </ul>
                 </div>
                 <div  id="settings_panel-footer">
-                    <input type="button" class="accept-changes" value="Сохранить" />
+                    <input type="button" class="accept-changes" value="${lang.buttons.save}" />
                 </div>
             </div>
         `;
@@ -660,11 +774,11 @@ window.onload = () => {
                 setCookie('invert_y', +elementInvertY.checked);
                 setCookie('mouse_sensitivity', elementMouseSensitivity.value);
 
-                messageBox('Настройки сохранены');
+                messageBox(lang.systemTexts[0]);
             }
 
             else if (document.getElementById('message_box') === null) {
-                messageBox('Нет изменений в настройках');
+                messageBox(lang.systemTexts[3]);
             }
         });
     }

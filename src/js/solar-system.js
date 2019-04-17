@@ -397,11 +397,11 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
             
 			range.addEventListener('input', function () {
                 speed = range.value / 8922394.583;
-                speedControl.innerHTML = 'скорость: ' + range.value + ' км/с';
+                speedControl.innerHTML = 'speed: ' + range.value + ' km/s';
 			});
             
             speed = range.value / 8922394.583;
-			speedControl.innerHTML = 'скорость: ' + range.value + ' км/с';
+			speedControl.innerHTML = 'speed: ' + range.value + ' km/s';
             
             controls = new CameraControls(camera);
             controls.direction = px < cx ? Math.atan((pz - cz) / (px - cx)) + Math.PI / 2 : Math.atan((pz - cz) / (px - cx)) - Math.PI / 2;
@@ -487,9 +487,9 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
                 if (speed >= 0.01 && speed <= 0.0331) speed -= event.deltaY / 250000;
                 if (speed > 0.0331) speed = 0.0331;
                 if (speed < 0.0000005) speed = 0.0000005;
-                speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/с';
+                speedControl.innerHTML = 'speed: ' + (speed * 8922394.583).toFixed(2) + ' km/s';
 			});
-			speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/с';
+			speedControl.innerHTML = 'speed: ' + (speed * 8922394.583).toFixed(2) + ' km/s';
             
             controls = new CameraControls(camera);
             controls.direction = px < cx ? Math.atan((pz - cz) / (px - cx)) + Math.PI / 2 : Math.atan((pz - cz) / (px - cx)) - Math.PI / 2;

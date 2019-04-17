@@ -1,6 +1,9 @@
-const webpack =  require('webpack')
-const merge = require('webpack-merge')
-const baseWebpackConfig = require('./webpack.base.conf')
+const path = require('path');
+const webpack =  require('webpack');
+const merge = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PATHS = require('./paths-config.js');
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   // DEV config
@@ -9,6 +12,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   devServer: {
     contentBase: baseWebpackConfig.externals.paths.dist,
     port: 8081,
+    historyApiFallback: true,
     overlay: {
       warnings: true,
       errors: true
@@ -17,10 +21,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.SourceMapDevToolPlugin({
       filename: '[file].map'
+    }),
+    new HtmlWebpackPlugin({
+      hash: false,
+      template: `${PATHS.src}/index.html`,
+      filename: './index.html'
     })
   ]
-})
+});
 
 module.exports = new Promise((resolve, reject) => {
   resolve(devWebpackConfig)
-})
+});
