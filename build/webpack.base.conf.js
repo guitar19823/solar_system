@@ -22,7 +22,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/
     }, {
-      test: /\.(png|jpg|gif|svg)$/,
+      test: /\.(png|jpg|gif|svg|mp3)$/,
       loader: 'file-loader',
       options: {
         name: '[name].[ext]'
@@ -64,6 +64,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: `${PATHS.src}/img`, to: `${PATHS.assets}img` },
+      { from: `${PATHS.src}/sounds`, to: `${PATHS.assets}sounds` },
       { from: `${PATHS.src}/static`, to: '' },
     ])
   ]
