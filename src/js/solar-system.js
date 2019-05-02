@@ -1,4 +1,5 @@
 const THREE = require('three');
+const Lensflare = require('./lensflare.js');
 
 /* ************************************************ */
 /* ****************** SOLAR SYSTEM **************** */
@@ -145,29 +146,26 @@ const solarSystem = (antialias = false, textures = 'high', graphics = 1) => {
 		light.shadow.camera.near = 0.001;
 		light.shadow.camera.far = 50000;
         light.castShadow = true;
+		
 		scene.add(light);
         //let helper = new THREE.CameraHelper( light.shadow.camera );
         //scene.add(helper);
+
+        const textureFlare0 = textureLoader.load('/img/lensflare.png');
+        const textureFlare3 = textureLoader.load('/img/lensflare3.png');
+
+        const lensflare = new THREE.Lensflare();
+
+        lensflare.addElement( new THREE.LensflareElement( textureFlare3, 10, 0.3 ) );
+        lensflare.addElement( new THREE.LensflareElement( textureFlare0, 30, 0.6 ) );
+        lensflare.addElement( new THREE.LensflareElement( textureFlare3, 50, 1 ) );
+
+        light.add(lensflare);
 		
 		const ambient = new THREE.AmbientLight(0x050505, 0.2);
 
 		scene.add(ambient);
         // Lights
-
-        // lensflares
-        const textureFlare0 = textureLoader.load('/img/lensflare.png');
-        const textureFlare3 = textureLoader.load('/img/lensflare3.png');
-
-        //const lensflare = new THREE.Lensflare();
-
-        //lensflare.addElement( new THREE.LensflareElement( textureFlare0, 700, 0, light.color ) );
-        //lensflare.addElement( new THREE.LensflareElement( textureFlare3, 60, 0.6 ) );
-        //lensflare.addElement( new THREE.LensflareElement( textureFlare3, 70, 0.7 ) );
-        //lensflare.addElement( new THREE.LensflareElement( textureFlare3, 120, 0.9 ) );
-        //lensflare.addElement( new THREE.LensflareElement( textureFlare3, 70, 1 ) );
-
-        //light.add(lensflare);
-        // lensflares
 		
         // Camera
 		camera = new THREE.PerspectiveCamera(65, width / height, 0.001, 50000000000);
