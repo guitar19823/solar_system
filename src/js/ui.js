@@ -19,6 +19,8 @@ window.onload = () => {
   const container = document.getElementsByClassName('container')[0];
 
   let year = new Date().getFullYear(),
+    menuIsOpened = false,
+    timeToHide = 30000,
     timeout;
 
   year = year === 2018 ? year : '2018 - ' + year;
@@ -243,9 +245,44 @@ window.onload = () => {
     setCookie('graphics', '1');
   }
 
-  button_menu.addEventListener('click', function () {
-    nav.classList.contains('to_top') ? closeNav() : openNav();
+  function hide() {
+    container.classList.add('opacity');
+
+    isMobileDevice() || (document.body.style.cursor = 'none');
+  }
+
+  function show() {
+    clearTimeout(timeout);
+    isMobileDevice() || (document.body.style.cursor = 'auto');
+
+    container.classList.remove('opacity');
+
+    timeout = setTimeout(hide, timeToHide);
+  }
+
+  timeout = setTimeout(hide, timeToHide);
+
+  ['click', 'mousemove', 'touchmove'].map(function (event) {
+    document.addEventListener(event, show);
   });
+
+  button_menu.addEventListener('click', function () {
+    menuIsOpened ? closeNav() : openNav();
+  });
+
+  if (!isMobileDevice()) {
+    window.addEventListener('keydown', function (event) {
+      if (event.repeat === false) {
+        switch (event.code) {
+          case 'Escape': {
+            show();
+
+            menuIsOpened ? closeNav() : openNav();
+          };
+        }
+      }
+    });
+  }
 
   for (let i = 0, l = menuBtns.length; i < l; i++) {
     menuBtns[i].addEventListener('click', () => {
@@ -256,12 +293,9 @@ window.onload = () => {
     });
 
     menuBtns[i].addEventListener('mouseenter', () => {
-      system_sounds.play();
-    });
-
-    menuBtns[i].addEventListener('mouseleave', () => {
       system_sounds.pause();
       system_sounds.currentTime = 0;
+      system_sounds.play();
     });
   }
 
@@ -269,7 +303,9 @@ window.onload = () => {
   * openNav
   */
   function openNav() {
+    menuIsOpened = true;
     system_sounds.src = `/sounds/1.mp3`;
+
     nav.classList.add('to_top'),
       button_menu.classList.add('rotate_button'),
       button_menu.children[0].classList.add('turn_right'),
@@ -287,6 +323,7 @@ window.onload = () => {
       button_menu.children[1].classList.remove('turn_left'),
       setTimeout(function () {
         blackPanel.remove();
+        menuIsOpened = false;
       }, 500)
   }
 

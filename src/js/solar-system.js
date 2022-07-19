@@ -243,14 +243,16 @@ void main( void ) {
 			speedControl.innerHTML = 'скорость: ' + range.value + ' км/c';
 
 			controls = new CameraControls(camera);
-			controls.direction = positions.px < positions.cx ? Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) + Math.PI / 2 : Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) - Math.PI / 2;
+			controls.direction = positions.px < positions.cx
+				? Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) + Math.PI / 2
+				: Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) - Math.PI / 2;
+
 			controls.x = positions.cx;
 			controls.z = positions.cz;
 
 			controls.updateCamera();
 
-			let startX,
-				startY;
+			let startX, startY;
 
 			const areaTouchMove = document.getElementById('areaTouchMove');
 			const forward = document.getElementById('forward');
@@ -429,7 +431,7 @@ void main( void ) {
 		let arr = [
 			['planets', doNotFlyLookAtSelectedPlanet],
 			['flight', flightControl],
-			['sounds', doNotFlyLookAtRandomPlanet],
+			['sounds', doNotFlyLookAtSelectedPlanet],
 			['chat', doNotFlyLookAtRandomPlanet],
 			['contacts', doNotFlyLookAtEarth],
 			['settings', doNotFlyLookAtSelectedPlanet]
@@ -533,13 +535,13 @@ void main( void ) {
 			}
 
 			if (upButtonState) {
-				controls.y += Math.sin(controls.direction) * speed;
+				controls.y -= Math.sin(controls.direction) * speed;
 
 				controls.updateCamera();
 			}
 
 			if (downButtonState) {
-				controls.y += Math.sin(controls.direction + Math.PI) * speed;
+				controls.y += Math.sin(controls.direction) * speed;
 
 				controls.updateCamera();
 			}
