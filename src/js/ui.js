@@ -279,6 +279,7 @@ window.onload = () => {
 
             menuIsOpened ? closeNav() : openNav();
           };
+            break;
         }
       }
     });

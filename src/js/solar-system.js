@@ -7,6 +7,7 @@ const Ring = require('./utils/Ring');
 const CameraControls = require('./utils/CameraControls');
 const Physics = require('./utils/Physics');
 const CameraLook = require('./utils/CameraLook');
+const Inertia = require('./utils/Inertia');
 
 /* ************************************************ */
 /* ****************** SOLAR SYSTEM **************** */
@@ -207,7 +208,9 @@ void main( void ) {
 		window.addEventListener('resize', onWindowResize, false);
 	}
 
-	let forwardButtonState = false,
+	let counterclockwiseRotationState = false,
+		clockwiseRotationState = false,
+		forwardButtonState = false,
 		backButtonState = false,
 		leftButtonState = false,
 		rightButtonState = false,
@@ -367,6 +370,8 @@ void main( void ) {
 			window.addEventListener('keydown', function (event) {
 				if (event.repeat === false) {
 					switch (event.code) {
+						case 'KeyQ': counterclockwiseRotationState = true; break;
+						case 'KeyE': clockwiseRotationState = true; break;
 						case 'KeyW': forwardButtonState = true; break;
 						case 'KeyS': backButtonState = true; break;
 						case 'KeyA': leftButtonState = true; break;
@@ -379,6 +384,8 @@ void main( void ) {
 
 			window.addEventListener('keyup', function (event) {
 				switch (event.code) {
+					case 'KeyQ': counterclockwiseRotationState = false; break;
+					case 'KeyE': clockwiseRotationState = false; break;
 					case 'KeyW': forwardButtonState = false; break;
 					case 'KeyS': backButtonState = false; break;
 					case 'KeyA': leftButtonState = false; break;
@@ -459,6 +466,8 @@ void main( void ) {
 		renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
+	const inertia = new Inertia();
+
 	function renderScene() {
 		requestAnimationFrame(renderScene);
 
@@ -504,44 +513,44 @@ void main( void ) {
 		if (objects[12]) new CameraLook(camera, space, 15000000000, ROTATIONAL_SPEED, positions, time);
 
 		if (flightCam) {
-			if (forwardButtonState) {
-				controls.z += Math.cos(controls.direction) * speed;
-				controls.x -= Math.sin(controls.direction) * speed;
-				controls.y -= Math.sin(controls.angle) * speed;
+			if (forwardButtonState || inertia.forwardSpeed) {
+				controls.z += Math.cos(controls.direction) * inertia.forward(speed, forwardButtonState);
+				controls.x -= Math.sin(controls.direction) * inertia.forward(speed, forwardButtonState);
+				controls.y -= Math.sin(controls.angle) * inertia.forward(speed, forwardButtonState);
 
 				controls.updateCamera();
 			}
 
-			if (backButtonState) {
-				controls.z += Math.cos(controls.direction + Math.PI) * speed;
-				controls.x -= Math.sin(controls.direction + Math.PI) * speed;
-				controls.y -= Math.sin(controls.angle + Math.PI) * speed;
+			if (backButtonState || inertia.backSpeed) {
+				controls.z += Math.cos(controls.direction + Math.PI) * inertia.back(speed, backButtonState);
+				controls.x -= Math.sin(controls.direction + Math.PI) * inertia.back(speed, backButtonState);
+				controls.y -= Math.sin(controls.angle + Math.PI) * inertia.back(speed, backButtonState);
 
 				controls.updateCamera();
 			}
 
-			if (leftButtonState) {
-				controls.z += Math.sin(controls.direction) * speed;
-				controls.x += Math.cos(controls.direction) * speed;
+			if (leftButtonState || inertia.leftSpeed) {
+				controls.z += Math.sin(controls.direction) * inertia.left(speed, leftButtonState);
+				controls.x += Math.cos(controls.direction) * inertia.left(speed, leftButtonState);
 
 				controls.updateCamera();
 			}
 
-			if (rightButtonState) {
-				controls.z += Math.sin(controls.direction + Math.PI) * speed;
-				controls.x += Math.cos(controls.direction + Math.PI) * speed;
+			if (rightButtonState || inertia.rightSpeed) {
+				controls.z += Math.sin(controls.direction + Math.PI) * inertia.right(speed, rightButtonState);
+				controls.x += Math.cos(controls.direction + Math.PI) * inertia.right(speed, rightButtonState);
 
 				controls.updateCamera();
 			}
 
-			if (upButtonState) {
-				controls.y -= Math.sin(controls.direction) * speed;
+			if (upButtonState || inertia.topSpeed) {
+				controls.y -= Math.sin(controls.direction) * inertia.top(speed, upButtonState);
 
 				controls.updateCamera();
 			}
 
-			if (downButtonState) {
-				controls.y += Math.sin(controls.direction) * speed;
+			if (downButtonState || inertia.bottomSpeed) {
+				controls.y += Math.sin(controls.direction) * inertia.bottom(speed, downButtonState);
 
 				controls.updateCamera();
 			}
