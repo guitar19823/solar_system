@@ -39,7 +39,7 @@
 }
 
 body {
-  background-color: #1a1a1a;
+  background-color: #000;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -96,10 +96,12 @@ body {
 
 .cssload-loader::after {
   position: inherit;
-  display: block;
-  content: "loading";
+  display: flex;
+  justify-content: center;
+  width: 200px;
+  content: "Загрузка текстур...";
   color: #5c5edc;
-  font-size: 18px;
+  font-size: 12px;
   top: 120%;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -404,12 +406,12 @@ canvas {
 #control,
 #tracks {
   position: inherit;
-  left: 2vw;
+  left: 10vw;
   overflow: auto;
   max-height: 100%;
-  -webkit-transform: translateX(-150%);
-  -ms-transform: translateX(-150%);
-  transform: translateX(-150%);
+  -webkit-transform: translateX(-20vw);
+  -ms-transform: translateX(-20vw);
+  transform: translateX(-20vw);
   -webkit-animation: to-right .5s .7s both;
   animation: to-right .5s .7s both;
 }
@@ -578,7 +580,8 @@ canvas {
   margin: 3px -2px;
 }
 
-#speedControl {
+#speedControl,
+#boostControl {
   position: inherit;
   right: 2vw;
   height: 1.5em;
@@ -587,10 +590,14 @@ canvas {
   animation: to-left .5s .7s both;
 }
 
+#boostControl {
+  top: 10px;
+}
+
 #scroll {
   position: inherit;
   width: 120px;
-  top: 30px;
+  top: 40px;
   right: 2vw;
   -webkit-animation: to-left .5s .7s both;
   animation: to-left .5s .7s both;
@@ -672,7 +679,7 @@ select {}
 #gamePad input[type=range] {
   position: inherit;
   right: 2vw;
-  top: 5vh;
+  top: 40px;
   opacity: .5;
   width: 30vw;
   -webkit-transform: translateX(150%);
@@ -1014,6 +1021,7 @@ select {}
 
   #range,
   #speedControl,
+  #boostControl,
   #description {
     right: 4vw;
   }
@@ -1192,7 +1200,7 @@ select {}
 
 @-webkit-keyframes to-right {
   0% {
-    -webkit-transform: translateX(-150%)
+    -webkit-transform: translateX(-20vw)
   }
 
   100% {
@@ -1202,8 +1210,8 @@ select {}
 
 @keyframes to-right {
   0% {
-    -webkit-transform: translateX(-150%);
-    transform: translateX(-150%)
+    -webkit-transform: translateX(-20vw);
+    transform: translateX(-20vw)
   }
 
   100% {
@@ -1214,7 +1222,7 @@ select {}
 
 @-webkit-keyframes to-right_rotate {
   0% {
-    -webkit-transform: translateX(-150%) rotateZ(-180deg)
+    -webkit-transform: translateX(-20vw) rotateZ(-180deg)
   }
 
   100% {
@@ -1224,8 +1232,8 @@ select {}
 
 @keyframes to-right_rotate {
   0% {
-    -webkit-transform: translateX(-150%) rotateZ(-180deg);
-    transform: translateX(-150%) rotateZ(-180deg)
+    -webkit-transform: translateX(-20vw) rotateZ(-180deg);
+    transform: translateX(-20vw) rotateZ(-180deg)
   }
 
   100% {

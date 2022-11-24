@@ -15,7 +15,7 @@ class Inertia {
     this.lastTimeBottom = null;
   }
 
-  _increaseSpeed(currentSpeed, maxSpeed, lastTime) {
+  _increaseSpeed(currentSpeed, maxSpeed, boost, lastTime) {
     const currentTime = new Date().getTime();
     const returnData = {
       currentSpeed,
@@ -23,7 +23,7 @@ class Inertia {
     };
 
     if ((!lastTime || currentTime - lastTime > 100) && currentSpeed < maxSpeed) {
-      returnData.currentSpeed += maxSpeed / 100;
+      returnData.currentSpeed += boost;
 
       if (returnData.currentSpeed > maxSpeed) {
         returnData.currentSpeed = maxSpeed;
@@ -35,7 +35,7 @@ class Inertia {
     return returnData;
   };
 
-  _decreaseSpeed(currentSpeed, maxSpeed, lastTime) {
+  _decreaseSpeed(currentSpeed, boost, lastTime) {
     const currentTime = new Date().getTime();
     const returnData = {
       currentSpeed,
@@ -43,7 +43,7 @@ class Inertia {
     };
 
     if ((!lastTime || currentTime - lastTime > 100) && currentSpeed > 0) {
-      returnData.currentSpeed -= maxSpeed / 100;
+      returnData.currentSpeed -= boost;
 
       if (returnData.currentSpeed < 0) {
         returnData.currentSpeed = 0;
@@ -55,10 +55,10 @@ class Inertia {
     return returnData;
   };
 
-  forward(speed, isActive) {
+  forward(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.forwardSpeed, speed, this.lastTimeForward)
-      : this._decreaseSpeed(this.forwardSpeed, speed, this.lastTimeForward);
+      ? this._increaseSpeed(this.forwardSpeed, speed, boost, this.lastTimeForward)
+      : this._decreaseSpeed(this.forwardSpeed, boost, this.lastTimeForward);
 
     this.forwardSpeed = currentSpeed;
     this.lastTimeForward = lastTime;
@@ -66,10 +66,10 @@ class Inertia {
     return this.forwardSpeed;
   }
 
-  back(speed, isActive) {
+  back(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.backSpeed, speed, this.lastTimeBack)
-      : this._decreaseSpeed(this.backSpeed, speed, this.lastTimeBack);
+      ? this._increaseSpeed(this.backSpeed, speed, boost, this.lastTimeBack)
+      : this._decreaseSpeed(this.backSpeed, boost, this.lastTimeBack);
 
     this.backSpeed = currentSpeed;
     this.lastTimeBack = lastTime;
@@ -77,10 +77,10 @@ class Inertia {
     return this.backSpeed;
   }
 
-  left(speed, isActive) {
+  left(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.leftSpeed, speed, this.lastTimeLeft)
-      : this._decreaseSpeed(this.leftSpeed, speed, this.lastTimeLeft);
+      ? this._increaseSpeed(this.leftSpeed, speed, boost, this.lastTimeLeft)
+      : this._decreaseSpeed(this.leftSpeed, boost, this.lastTimeLeft);
 
     this.leftSpeed = currentSpeed;
     this.lastTimeLeft = lastTime;
@@ -88,10 +88,10 @@ class Inertia {
     return this.leftSpeed;
   }
 
-  right(speed, isActive) {
+  right(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.rightSpeed, speed, this.lastTimeRight)
-      : this._decreaseSpeed(this.rightSpeed, speed, this.lastTimeRight);
+      ? this._increaseSpeed(this.rightSpeed, speed, boost, this.lastTimeRight)
+      : this._decreaseSpeed(this.rightSpeed, boost, this.lastTimeRight);
 
     this.rightSpeed = currentSpeed;
     this.lastTimeRight = lastTime;
@@ -99,10 +99,10 @@ class Inertia {
     return this.rightSpeed;
   }
 
-  top(speed, isActive) {
+  top(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.topSpeed, speed, this.lastTimeTop)
-      : this._decreaseSpeed(this.topSpeed, speed, this.lastTimeTop);
+      ? this._increaseSpeed(this.topSpeed, speed, boost, this.lastTimeTop)
+      : this._decreaseSpeed(this.topSpeed, boost, this.lastTimeTop);
 
     this.topSpeed = currentSpeed;
     this.lastTimeTop = lastTime;
@@ -110,10 +110,10 @@ class Inertia {
     return this.topSpeed;
   }
 
-  bottom(speed, isActive) {
+  bottom(speed, boost, isActive) {
     const { currentSpeed, lastTime } = isActive
-      ? this._increaseSpeed(this.bottomSpeed, speed, this.lastTimeBottom)
-      : this._decreaseSpeed(this.bottomSpeed, speed, this.lastTimeBottom);
+      ? this._increaseSpeed(this.bottomSpeed, speed, boost, this.lastTimeBottom)
+      : this._decreaseSpeed(this.bottomSpeed, boost, this.lastTimeBottom);
 
     this.bottomSpeed = currentSpeed;
     this.lastTimeBottom = lastTime;

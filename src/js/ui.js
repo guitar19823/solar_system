@@ -481,9 +481,10 @@ window.onload = () => {
                     <p id="right"></p>
                 </div>
                 <div id="areaTouchMove"></div>
-                <input type="range" min="0" max="299792" value="15000" id="range">
+                <input type="range" min="0" max="299792" value="1000" id="range">
             </div>
             <div id="speedControl"></div>
+            <div id="boostControl"></div>
             <div id="arrow"></div>
         ` : `
             <div id="control">
@@ -504,6 +505,7 @@ window.onload = () => {
                 </div>
             </div>
             <div id="speedControl"></div>
+            <div id="boostControl"></div>
             <div id="scroll">
                 <div class="mouse">
                     <div></div>

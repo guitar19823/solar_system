@@ -21,7 +21,8 @@ const solarSystem = async (getCookie) => {
 		ringSaturn, ringUranus,
 		stars1, stars2, stars3, stars4, stars5,
 		time = new Date().getTime() / 1000,
-		speed = 0.0017;
+		speed = 0.000113,
+		boost = 0.00001;
 
 	const ROTATIONAL_SPEED = 0.02;
 	const PLANETS_SPEED = 1 / 10000000;
@@ -235,6 +236,7 @@ void main( void ) {
 
 		if (isMobileDevice()) {
 			const speedControl = document.getElementById('speedControl');
+			const boostControl = document.getElementById('boostControl');
 			const range = document.getElementById('range');
 
 			range.addEventListener('input', function () {
@@ -244,6 +246,7 @@ void main( void ) {
 
 			speed = range.value / 8922394.583;
 			speedControl.innerHTML = 'скорость: ' + range.value + ' км/c';
+			boostControl.innerHTML = 'ускорение: ' + (boost * 8922394.583).toFixed(2) + ' км/с<sup>2</sup>';
 
 			controls = new CameraControls(camera);
 			controls.direction = positions.px < positions.cx
@@ -268,27 +271,34 @@ void main( void ) {
 
 			function touchStart(event) {
 				event.preventDefault();
-				event.stopPropagation();
-				startX = event.changedTouches[0].clientX;
-				startY = event.changedTouches[0].clientY;
+
+				const target = [...event.changedTouches].find(i => i.target === areaTouchMove);
+
+				if (!target) return;
+
+				startX = target.clientX;
+				startY = target.clientY;
 
 				this.addEventListener('touchmove', touchMove, false);
 			}
 
-			function touchEnd() {
+			function touchEnd(event) {
 				event.preventDefault();
-				event.stopPropagation();
 				this.removeEventListener('touchmove', touchMove)
 			}
 
 			function touchMove(event) {
 				event.preventDefault();
-				event.stopPropagation();
-				let touchXRel = event.changedTouches[0].clientX - startX;
-				let touchYRel = event.changedTouches[0].clientY - startY;
 
-				startX = event.changedTouches[0].clientX;
-				startY = event.changedTouches[0].clientY;
+				const target = [...event.changedTouches].find(i => i.target === areaTouchMove);
+
+				if (!target) return;
+
+				let touchXRel = target.clientX - startX;
+				let touchYRel = target.clientY - startY;
+
+				startX = target.clientX;
+				startY = target.clientY;
 
 				if (controls != null) {
 					!!(+getCookie('invert_y')) ? (
@@ -324,6 +334,7 @@ void main( void ) {
 			});
 		} else {
 			const speedControl = document.getElementById('speedControl');
+			const boostControl = document.getElementById('boostControl');
 
 			document.addEventListener('wheel', function (event) {
 				if (speed >= 0.0000005 && speed < 0.00001) speed -= event.deltaY / 1000000000;
@@ -338,6 +349,7 @@ void main( void ) {
 			});
 
 			speedControl.innerHTML = 'скорость: ' + (speed * 8922394.583).toFixed(2) + ' км/c';
+			boostControl.innerHTML = 'ускорение: ' + (boost * 8922394.583).toFixed(2) + ' км/с<sup>2</sup>';
 
 			controls = new CameraControls(camera);
 			controls.direction = positions.px < positions.cx ? Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) + Math.PI / 2 : Math.atan((positions.pz - positions.cz) / (positions.px - positions.cx)) - Math.PI / 2;
@@ -514,46 +526,68 @@ void main( void ) {
 
 		if (flightCam) {
 			if (forwardButtonState || inertia.forwardSpeed) {
-				controls.z += Math.cos(controls.direction) * inertia.forward(speed, forwardButtonState);
-				controls.x -= Math.sin(controls.direction) * inertia.forward(speed, forwardButtonState);
-				controls.y -= Math.sin(controls.angle) * inertia.forward(speed, forwardButtonState);
+				const forward = inertia.forward(speed, boost, forwardButtonState);
+
+				controls.z += Math.cos(controls.direction) * forward;
+				controls.x -= Math.sin(controls.direction) * forward;
+				controls.y -= Math.sin(controls.angle) * forward;
 
 				controls.updateCamera();
 			}
 
 			if (backButtonState || inertia.backSpeed) {
-				controls.z += Math.cos(controls.direction + Math.PI) * inertia.back(speed, backButtonState);
-				controls.x -= Math.sin(controls.direction + Math.PI) * inertia.back(speed, backButtonState);
-				controls.y -= Math.sin(controls.angle + Math.PI) * inertia.back(speed, backButtonState);
+				const back = inertia.back(speed, boost, backButtonState);
+
+				controls.z += Math.cos(controls.direction + Math.PI) * back;
+				controls.x -= Math.sin(controls.direction + Math.PI) * back;
+				controls.y -= Math.sin(controls.angle + Math.PI) * back;
 
 				controls.updateCamera();
 			}
 
 			if (leftButtonState || inertia.leftSpeed) {
-				controls.z += Math.sin(controls.direction) * inertia.left(speed, leftButtonState);
-				controls.x += Math.cos(controls.direction) * inertia.left(speed, leftButtonState);
+				const left = inertia.left(speed, boost, leftButtonState);
+
+				controls.z += Math.sin(controls.direction) * left;
+				controls.x += Math.cos(controls.direction) * left;
 
 				controls.updateCamera();
 			}
 
 			if (rightButtonState || inertia.rightSpeed) {
-				controls.z += Math.sin(controls.direction + Math.PI) * inertia.right(speed, rightButtonState);
-				controls.x += Math.cos(controls.direction + Math.PI) * inertia.right(speed, rightButtonState);
+				const right = inertia.right(speed, boost, rightButtonState);
+
+				controls.z += Math.sin(controls.direction + Math.PI) * right;
+				controls.x += Math.cos(controls.direction + Math.PI) * right;
 
 				controls.updateCamera();
 			}
 
 			if (upButtonState || inertia.topSpeed) {
-				controls.y -= Math.sin(controls.direction) * inertia.top(speed, upButtonState);
+				if (Math.floor(controls.direction / Math.PI) % 2)
+					controls.y -= Math.sin(controls.direction) * inertia.top(speed, boost, upButtonState);
+				else
+					controls.y += Math.sin(controls.direction) * inertia.top(speed, boost, upButtonState);
 
 				controls.updateCamera();
 			}
 
 			if (downButtonState || inertia.bottomSpeed) {
-				controls.y += Math.sin(controls.direction) * inertia.bottom(speed, downButtonState);
+				if (Math.floor(controls.direction / Math.PI) % 2)
+					controls.y += Math.sin(controls.direction) * inertia.bottom(speed, boost, downButtonState);
+				else
+					controls.y -= Math.sin(controls.direction) * inertia.bottom(speed, boost, downButtonState);
 
 				controls.updateCamera();
 			}
+
+			// if (counterclockwiseRotationState) {
+			// 	scene.rotation.x += 0.01
+			// }
+
+			// if (clockwiseRotationState) {
+			// 	scene.rotation.x -= 0.01
+			// }
 
 			camera.position.set(controls.x, controls.y, controls.z);
 		}
